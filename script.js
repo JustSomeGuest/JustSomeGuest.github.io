@@ -122,27 +122,42 @@ ${randomNoise()}
 
     }
 
-    const tableName =
-    randomString(25);
+    const keyVar =
+    randomString(24);
 
-    const keyName =
-    randomString(25);
+    const tableVar =
+    randomString(24);
 
-    const decodeName =
-    randomString(25);
+    const dataVar =
+    randomString(24);
 
-    const resultName =
-    randomString(25);
+    const outVar =
+    randomString(24);
 
-    const byteName =
-    randomString(25);
+    const iVar =
+    randomString(24);
+
+    const numVar =
+    randomString(24);
+
+    const charVar =
+    randomString(24);
+
+    const decoderFunc =
+    randomString(24);
+
+    const loaderVar =
+    randomString(24);
+
+    const decodedByteVar =
+    randomString(24);
 
     const chunkTable =
     chunks.map(
         x => `"${x}"`
     ).join(",");
 
-    return `--[[ 
+    return `--[[
     Obfuscated by Nebula Obfuscator
     https://justsomeguest.github.io/
 ]]
@@ -151,141 +166,110 @@ return(function(...)
 
 ${fakeVars.join("\n")}
 
-local ${keyName} =
-"${key}"
+local ${keyVar}="${key}"
 
-local ${tableName} = {
+local ${tableVar}={
 ${chunkTable}
 }
 
-local function ${decodeName}()
+local function ${decoderFunc}()
 
-local ${resultName} = ""
+    local ${dataVar}=""
 
-for _,${byteName}
-in ipairs(${tableName}) do
+    for _,v in ipairs(${tableVar}) do
+        ${dataVar}=${dataVar}..v
+    end
 
-${resultName} =
-${resultName}
-..
-${byteName}
+    local ${outVar}=""
+    local ${iVar}=1
 
-end
+    while ${iVar}<=#${dataVar} do
 
-local ${randomString(20)} = 1
+        if string.sub(
+            ${dataVar},
+            ${iVar},
+            ${iVar}
+        )=="\\\\" then
 
-local ${randomString(20)} = ""
+            ${iVar}=${iVar}+1
 
-while ${randomString(20)}
-<= #${resultName} do
+            local ${numVar}=""
 
-local ${randomString(20)} =
-string.sub(
-${resultName},
-${randomString(20)},
-${randomString(20)}
-)
+            while ${iVar}<=#${dataVar} do
 
-${randomString(20)} =
-${randomString(20)}
+                local ${charVar}=
+                string.sub(
+                    ${dataVar},
+                    ${iVar},
+                    ${iVar}
+                )
 
-${randomString(20)} =
-${randomString(20)}
+                if tonumber(
+                    ${charVar}
+                )==nil then
+                    break
+                end
 
-break
+                ${numVar}=
+                ${numVar}
+                ..
+                ${charVar}
 
-end
+                ${iVar}=
+                ${iVar}+1
 
-return loadstring(
-(function()
+            end
 
-local ${randomString(20)} = ""
+            local ${decodedByteVar}=
+            bit32.bxor(
 
-local ${randomString(20)} = 1
+                tonumber(
+                    ${numVar}
+                ),
 
-while ${randomString(20)}
-<= #${resultName} do
+                string.byte(
 
-if string.sub(
-${resultName},
-${randomString(20)},
-${randomString(20)}
-) == "\\\\" then
+                    ${keyVar},
 
-${randomString(20)} =
-${randomString(20)} + 1
+                    (
+                        (
+                            #${outVar}
+                        )
+                        %
+                        #${keyVar}
+                    )
+                    +1
 
-local ${randomString(20)} =
-""
+                )
 
-while ${randomString(20)}
-<= #${resultName} do
+            )
 
-local ${randomString(20)} =
-string.sub(
-${resultName},
-${randomString(20)},
-${randomString(20)}
-)
+            ${outVar}=
+            ${outVar}
+            ..
+            string.char(
+                ${decodedByteVar}
+            )
 
-if tonumber(
-${randomString(20)}
-) == nil then
-break
-end
+        else
 
-${randomString(20)} =
-${randomString(20)}
-..
-${randomString(20)}
+            ${iVar}=
+            ${iVar}+1
 
-${randomString(20)} =
-${randomString(20)} + 1
+        end
 
-end
+    end
 
-${randomString(20)} =
-${randomString(20)}
-..
-string.char(
-
-tonumber(
-${randomString(20)}
-)
-
-~
-
-string.byte(
-${keyName},
-(
-(
-#${randomString(20)}
-)
-%
-#${keyName}
-)
-+1
-)
-
-)
-
-else
-
-${randomString(20)} =
-${randomString(20)} + 1
+    return ${outVar}
 
 end
 
-end
+local ${loaderVar}=
+(loadstring or load)
 
-return ${randomString(20)}
-
-end)()
+return ${loaderVar}(
+    ${decoderFunc}()
 )()
-
-end
-
-return ${decodeName}()
 
 end)(...)
 `;
