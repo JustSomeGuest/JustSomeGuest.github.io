@@ -3,23 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Nebula Obfuscator</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <div class="bg"></div>
+
     <div class="container">
-        <h1>Nebula Obfuscator</h1>
 
-        <textarea id="input" placeholder="Paste Luau code here..."></textarea>
-
-        <div class="buttons">
-            <button id="obfuscateBtn">Obfuscate</button>
-            <button id="cleanBtn">Clean Text</button>
+        <div class="topbar">
+            <div>
+                <h1>Nebula Obfuscator</h1>
+                <p>Advanced Luau Obfuscation</p>
+            </div>
         </div>
 
-        <textarea id="output" placeholder="Obfuscated output..." readonly></textarea>
+        <div class="editor">
+
+            <div class="panel">
+
+                <div class="panelHeader">
+                    <span>Input</span>
+                </div>
+
+                <textarea
+                    id="input"
+                    placeholder="Paste Luau script here..."
+                ></textarea>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="panelHeader">
+                    <span>Output</span>
+
+                    <button id="copyBtn">
+                        Copy
+                    </button>
+                </div>
+
+                <textarea
+                    id="output"
+                    readonly
+                    placeholder="Obfuscated script..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <button id="obfuscateBtn">
+                Obfuscate
+            </button>
+
+            <button id="cleanBtn">
+                Clean
+            </button>
+
+        </div>
+
     </div>
 
     <script src="script.js"></script>
