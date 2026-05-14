@@ -1,4 +1,11 @@
 const input = document.getElementById("input");
+const output = document.getElementById("output");
+const obfuscateBtn = document.getElementById("obfuscateBtn");
+const cleanBtn = document.getElementById("cleanBtn");
+
+function randomString(length) {
+    const chars = "Il1O0abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let result = "";
 
     for (let i = 0; i < length; i++) {
         result += chars[Math.floor(Math.random() * chars.length)];
@@ -7,7 +14,7 @@ const input = document.getElementById("input");
     return result;
 }
 
-function toByteArray(str) {
+function toBytes(str) {
     const bytes = [];
 
     for (let i = 0; i < str.length; i++) {
@@ -17,43 +24,40 @@ function toByteArray(str) {
     return bytes;
 }
 
-function generateDecoder(byteTable, key) {
-    return `
-local ${randomString(10)}=${key}
-local ${randomString(10)}={${byteTable.join(",")}}
-
-local function ${randomString(12)}(${randomString(5)})
-    local ${randomString(5)}={}
-
-    for _,${randomString(5)} in ipairs(${randomString(5)}) do
-        table.insert(${randomString(5)},string.char(bit32.bxor(${randomString(5)},${key})))
-    end
-
-    return table.concat(${randomString(5)})
-end
-
-loadstring(${randomString(12)}(${randomString(10)}))()
-`;
-}
-
 function obfuscate(code) {
     const key = Math.floor(Math.random() * 200) + 20;
-    const bytes = toByteArray(code).map(b => b ^ key);
 
-    let stub = generateDecoder(bytes, key);
+    const encoded = toBytes(code).map(b => b ^ key);
 
-    stub = stub
-        .replace(/\n/g, " ")
-        .replace(/\s+/g, " ");
+    const keyVar = randomString(12);
+    const tableVar = randomString(12);
+    const decodeFunc = randomString(12);
+    const resultVar = randomString(12);
+    const byteVar = randomString(12);
 
-    return `--[[ Nebula Obfuscator ]] ${stub}`;
+    return `--[[ Nebula Obfuscator ]]
+local ${keyVar}=${key}
+local ${tableVar}={${encoded.join(",")}}
+
+local function ${decodeFunc}()
+    local ${resultVar}={}
+
+    for _,${byteVar} in ipairs(${tableVar}) do
+        ${resultVar}[#${resultVar}+1]=string.char(bit32.bxor(${byteVar},${keyVar}))
+    end
+
+    return table.concat(${resultVar})
+end
+
+loadstring(${decodeFunc}())()
+`;
 }
 
 obfuscateBtn.addEventListener("click", () => {
     const code = input.value;
 
     if (!code.trim()) {
-        alert("Please enter Luau code.");
+        alert("Enter Luau code first.");
         return;
     }
 
