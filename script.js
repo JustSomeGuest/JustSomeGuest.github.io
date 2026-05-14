@@ -95,19 +95,25 @@ local ${t} = {${Array.from({length: randInt(2, 5)}, () => `"${randomString(15)}"
 local ${v} = table.concat(${t}, "")`;
 }
 
-function createOrderArray(chunksLen) {
-  const indices = [...Array(chunksLen).keys()];
-  for (let i = indices.length - 1; i > 0; i--) {
+function createChunkStorage(chunks) {
+  const n = chunks.length;
+  const perm = [...Array(n).keys()];
+  for (let i = n - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [indices[i], indices[j]] = [indices[j], indices[i]];
+    [perm[i], perm[j]] = [perm[j], perm[i]];
   }
-  const orderItems = indices.map(idx => {
+  const storage = new Array(n);
+  const orderExprs = new Array(n);
+  for (let i = 0; i < n; i++) {
+    const storeIdx = perm[i];
+    storage[storeIdx] = chunks[i];
     const a = randInt(1, 20);
     const b = randInt(1, 20);
-    const c = idx - a * b;
-    return `(${a} * ${b} + ${c})`;
-  });
-  return { indices, orderItems };
+    const target = storeIdx + 1;
+    const c = target - a * b;
+    orderExprs[i] = `(${a} * ${b} + ${c})`;
+  }
+  return { storage, orderExprs };
 }
 
 function computeChecksum(str) {
@@ -153,7 +159,9 @@ function obfuscate(code) {
     chunks.push(substitutedHex.slice(idx, idx + sz));
     idx += sz;
   }
-  const { indices, orderItems } = createOrderArray(chunks.length);
+
+  const { storage, orderExprs } = createChunkStorage(chunks);
+
   const junkBlocks = [];
   const junkCount = randInt(40, 70);
   for (let i = 0; i < junkCount; i++) {
@@ -163,6 +171,7 @@ function obfuscate(code) {
     else if (roll < 0.9) junkBlocks.push(junkLoop());
     else junkBlocks.push(junkTableConcat());
   }
+
   const key1Var = randomString(20);
   const key2Var = randomString(20);
   const subMapVar = randomString(20);
@@ -173,8 +182,9 @@ function obfuscate(code) {
   const loadVar = randomString(20);
   const resultVar = randomString(20);
   const checksumVar = randomString(20);
+
   const luaCode = `--[[
- Obfuscated by Enhanced Nebula Obfuscator
+ Obfuscated by Nebula Obfuscator
  https://justsomeguest.github.io/
 --]]
 
@@ -188,11 +198,11 @@ return (function(...)
   local ${invSubMapVar} = {${Object.entries(invSubMap).map(([k,v]) => `["${k}"]="${v}"`).join(",")}}
 
   local ${chunkTableVar} = {
-    ${chunks.map(c => `"${c}"`).join(",\n    ")}
+    ${storage.map(c => `"${c}"`).join(",\n    ")}
   }
 
   local ${orderTableVar} = {
-    ${orderItems.join(",\n    ")}
+    ${orderExprs.join(",\n    ")}
   }
 
   local ${checksumVar} = ${checksum}
@@ -200,7 +210,7 @@ return (function(...)
   local function ${decodeFuncVar}()
     local ordered = {}
     for idx = 1, #${orderTableVar} do
-      local realIdx = (${orderTableVar}[idx]) % ${chunks.length} + 1
+      local realIdx = ${orderTableVar}[idx]
       ordered[idx] = ${chunkTableVar}[realIdx]
     end
     local combined = table.concat(ordered)
