@@ -5,10 +5,11 @@ const cleanBtn = document.getElementById("cleanBtn");
 const copyBtn = document.getElementById("copyBtn");
 
 function randomString(length = 20) {
-  const chars = "Il1O0ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  const first = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const rest = "Il1O0ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  let result = first.charAt(Math.floor(Math.random() * first.length));
+  for (let i = 1; i < length; i++) {
+    result += rest.charAt(Math.floor(Math.random() * rest.length));
   }
   return result;
 }
@@ -39,14 +40,6 @@ function bytesToHex(bytes) {
   return Array.from(bytes)
     .map(b => b.charCodeAt(0).toString(16).padStart(2, "0"))
     .join("");
-}
-
-function hexToBytes(hex) {
-  const bytes = [];
-  for (let i = 0; i < hex.length; i += 2) {
-    bytes.push(String.fromCharCode(parseInt(hex.substr(i, 2), 16)));
-  }
-  return bytes.join("");
 }
 
 function hexSubstitute(hex, map) {
@@ -180,7 +173,6 @@ function obfuscate(code) {
   const loadVar = randomString(20);
   const resultVar = randomString(20);
   const checksumVar = randomString(20);
-  const integrityCheckVar = randomString(20);
   const luaCode = `--[[
  Obfuscated by Enhanced Nebula Obfuscator
  https://justsomeguest.github.io/
