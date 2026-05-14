@@ -1,96 +1,222 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,sans-serif;
 }
 
-body {
-    background: #0b1020;
-    color: white;
-
-    min-height: 100vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 20px;
+body{
+    background:#070b14;
+    color:white;
+    min-height:100vh;
+    overflow:hidden;
 }
 
-.container {
-    width: 100%;
-    max-width: 1000px;
+.bg{
+    position:fixed;
+    inset:0;
 
-    background: #12182c;
+    background:
+    radial-gradient(circle at top left,#4d7cff22,transparent 30%),
+    radial-gradient(circle at bottom right,#9d4dff22,transparent 30%),
+    #070b14;
 
-    border: 1px solid #273459;
-    border-radius: 18px;
-
-    padding: 24px;
+    z-index:-1;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+.container{
+    width:92%;
+    max-width:1400px;
 
-    font-size: 32px;
+    margin:40px auto;
+
+    background:rgba(14,18,30,0.82);
+
+    border:1px solid #1f2942;
+
+    border-radius:24px;
+
+    backdrop-filter:blur(12px);
+
+    padding:24px;
+
+    box-shadow:
+    0 0 60px rgba(0,0,0,0.5),
+    inset 0 0 0 1px rgba(255,255,255,0.03);
 }
 
-textarea {
-    width: 100%;
-    height: 230px;
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 
-    resize: none;
-
-    background: #0f1425;
-
-    border: 1px solid #31406d;
-    border-radius: 12px;
-
-    color: white;
-
-    padding: 14px;
-
-    font-size: 14px;
-
-    outline: none;
+    margin-bottom:24px;
 }
 
-textarea:focus {
-    border-color: #5d84ff;
+h1{
+    font-size:38px;
+    font-weight:800;
+
+    background:linear-gradient(
+        90deg,
+        #7aa2ff,
+        #b07cff
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
-.buttons {
-    display: flex;
-    gap: 12px;
-
-    margin: 16px 0;
+p{
+    color:#8892b0;
+    margin-top:4px;
 }
 
-button {
-    flex: 1;
-
-    border: none;
-    border-radius: 12px;
-
-    padding: 14px;
-
-    background: #4f75ff;
-
-    color: white;
-
-    font-size: 15px;
-
-    cursor: pointer;
-
-    transition: 0.2s;
+.editor{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
 }
 
-button:hover {
-    transform: translateY(-2px);
+.panel{
+    background:#0d1322;
+
+    border:1px solid #1d2944;
+
+    border-radius:18px;
+
+    overflow:hidden;
 }
 
-#cleanBtn {
-    background: #ff4f70;
+.panelHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:14px 16px;
+
+    border-bottom:1px solid #1c2742;
+
+    background:#11192c;
+}
+
+.panelHeader span{
+    color:#c8d2f0;
+    font-size:14px;
+    font-weight:600;
+}
+
+textarea{
+    width:100%;
+    height:520px;
+
+    resize:none;
+
+    border:none;
+    outline:none;
+
+    background:transparent;
+
+    color:white;
+
+    padding:18px;
+
+    font-size:14px;
+    line-height:1.5;
+
+    font-family:
+    Consolas,
+    monospace;
+}
+
+textarea::placeholder{
+    color:#5e6b8b;
+}
+
+.buttons{
+    display:flex;
+    gap:14px;
+
+    margin-top:20px;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+
+    transition:0.2s;
+}
+
+#obfuscateBtn{
+    flex:1;
+
+    background:linear-gradient(
+        90deg,
+        #5d7cff,
+        #9d4dff
+    );
+
+    color:white;
+
+    padding:15px;
+
+    border-radius:14px;
+
+    font-size:15px;
+    font-weight:700;
+}
+
+#obfuscateBtn:hover{
+    transform:translateY(-2px);
+    opacity:0.92;
+}
+
+#cleanBtn{
+    width:140px;
+
+    background:#1a2237;
+
+    color:#d9e2ff;
+
+    border:1px solid #2b395e;
+
+    border-radius:14px;
+
+    font-weight:600;
+}
+
+#cleanBtn:hover{
+    background:#232f4d;
+}
+
+#copyBtn{
+    width:74px;
+    height:34px;
+
+    border-radius:10px;
+
+    background:#1d2740;
+
+    color:#dbe5ff;
+
+    border:1px solid #31406b;
+
+    font-size:13px;
+    font-weight:700;
+}
+
+#copyBtn:hover{
+    background:#2a3860;
+}
+
+@media(max-width:1000px){
+
+    .editor{
+        grid-template-columns:1fr;
+    }
+
+    textarea{
+        height:320px;
+    }
+
 }
