@@ -1,636 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-
-    <style>
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        padding: 30px;
-        background: transparent;
-        color: white;
-        font-family: Inter, sans-serif;
-      }
-
-      .container {
-        height: calc(100vh - 60px);
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-      }
-
-      .title {
-        font-size: 42px;
-        font-weight: 700;
-      }
-
-      .sub {
-        color: #94a3b8;
-        margin-bottom: 10px;
-      }
-
-      .editorWrap {
-        flex: 1;
-        display: flex;
-        gap: 20px;
-        min-height: 0;
-      }
-
-      .editor {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-
-        background: rgba(255,255,255,0.04);
-
-        border: 1px solid rgba(255,255,255,0.08);
-
-        border-radius: 22px;
-
-        overflow: hidden;
-
-        backdrop-filter: blur(20px);
-
-        box-shadow:
-          0 0 30px rgba(59,130,246,0.12);
-      }
-
-      .topbar {
-        padding: 14px 18px;
-
-        border-bottom:
-          1px solid rgba(255,255,255,0.08);
-
-        display: flex;
-
-        justify-content: space-between;
-
-        align-items: center;
-      }
-
-      textarea {
-        flex: 1;
-
-        resize: none;
-
-        border: none;
-
-        outline: none;
-
-        background: transparent;
-
-        color: white;
-
-        padding: 18px;
-
-        font-size: 14px;
-
-        line-height: 1.5;
-
-        font-family: Consolas, monospace;
-
-        overflow-y: auto;
-      }
-
-      textarea::-webkit-scrollbar {
-        width: 10px;
-      }
-
-      textarea::-webkit-scrollbar-track {
-        background:
-          rgba(255,255,255,0.03);
-      }
-
-      textarea::-webkit-scrollbar-thumb {
-
-        background: linear-gradient(
-          180deg,
-          #3b82f6,
-          #9333ea
-        );
-
-        border-radius: 999px;
-
-        box-shadow:
-          0 0 15px rgba(147,51,234,0.5);
-      }
-
-      .buttons {
-        display: flex;
-
-        align-items: center;
-
-        gap: 12px;
-
-        flex-wrap: wrap;
-      }
-
-      button {
-        border: none;
-
-        border-radius: 14px;
-
-        padding: 14px 22px;
-
-        background: linear-gradient(
-          135deg,
-          #3b82f6,
-          #9333ea
-        );
-
-        color: white;
-
-        cursor: pointer;
-
-        transition: 0.25s;
-
-        font-weight: 600;
-      }
-
-      button:hover {
-
-        transform: translateY(-2px);
-
-        box-shadow:
-          0 0 25px rgba(147,51,234,0.4);
-      }
-
-      .toggleButton {
-        border: none;
-
-        border-radius: 14px;
-
-        padding: 14px 22px;
-
-        background: linear-gradient(
-          135deg,
-          #3b82f6,
-          #9333ea
-        );
-
-        color: white;
-
-        cursor: pointer;
-
-        transition: 0.25s;
-
-        font-weight: 600;
-
-        user-select: none;
-      }
-
-      .toggleButton:hover {
-
-        transform: translateY(-2px);
-
-        box-shadow:
-          0 0 25px rgba(147,51,234,0.4);
-      }
-
-      .toggleButton.off {
-        opacity: 0.55;
-        filter: grayscale(0.4);
-      }
-
-    </style>
-
-  </head>
-
-  <body>
-
-    <div class="container">
-
-      <div class="title">
-        LMG2L/G2L To Dot Syntax Converter
-      </div>
-
-      <div class="sub">
-        Convert LocalMaze/G2L generated code into clean dot syntax.
-      </div>
-
-      <div class="buttons">
-
-        <button onclick="convertCode()">
-          Convert
-        </button>
-
-        <button
-          id="autoNamingToggle"
-          class="toggleButton"
-          onclick="toggleAutoNaming()"
-        >
-          Automatic Naming: ON
-        </button>
-
-        <button onclick="clearAll()">
-          Clear
-        </button>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>LMG2L Converter</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top, rgba(59,130,246,0.14), transparent 60%),
+        radial-gradient(circle at bottom, rgba(147,51,234,0.10), transparent 60%),
+        #0a0a0f;
+      color: white;
+      font-family: Inter, sans-serif;
+    }
+
+    .container {
+      height: calc(100vh - 48px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .title {
+      font-size: 46px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      text-shadow: 0 0 25px rgba(59,130,246,0.25);
+    }
+
+    .sub {
+      color: #94a3b8;
+      margin-top: -8px;
+      font-size: 16px;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 22px;
+      background: linear-gradient(135deg, #3b82f6, #9333ea);
+      color: white;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-weight: 650;
+      box-shadow: 0 0 18px rgba(59,130,246,0.15);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px rgba(147,51,234,0.35);
+    }
+
+    .toggleButton {
+      border-radius: 14px;
+      padding: 14px 22px;
+      background: linear-gradient(135deg, #3b82f6, #9333ea);
+      color: white;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-weight: 650;
+      user-select: none;
+      box-shadow: 0 0 18px rgba(59,130,246,0.15);
+    }
+
+    .toggleButton:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px rgba(147,51,234,0.35);
+    }
+
+    .toggleButton.off {
+      opacity: 0.5;
+      filter: grayscale(0.5);
+    }
+
+    .editorWrap {
+      flex: 1;
+      display: flex;
+      gap: 18px;
+      min-height: 0;
+    }
+
+    .editor {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      overflow: hidden;
+      backdrop-filter: blur(22px);
+      box-shadow:
+        0 0 35px rgba(59,130,246,0.12),
+        0 0 60px rgba(147,51,234,0.06);
+      position: relative;
+    }
+
+    .editor::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(59,130,246,0.08), transparent 55%);
+      pointer-events: none;
+    }
+
+    .topbar {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    textarea {
+      flex: 1;
+      resize: none;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: white;
+      padding: 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      font-family: Consolas, monospace;
+      overflow-y: auto;
+    }
+
+    textarea::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    textarea::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.03);
+    }
+
+    textarea::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #3b82f6, #9333ea);
+      border-radius: 999px;
+      box-shadow: 0 0 15px rgba(147,51,234,0.4);
+    }
+
+    .copyBtn {
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      background: rgba(59,130,246,0.25);
+      border: 1px solid rgba(147,51,234,0.35);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .copyBtn:hover {
+      transform: translateY(-1px);
+      background: rgba(59,130,246,0.35);
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="title">
+      LMG2L → Dot Syntax Converter
+    </div>
+
+    <div class="sub">
+      Convert LocalMaze / G2L generated UI into clean dot-syntax Luau instantly.
+    </div>
+
+    <div class="buttons">
+
+      <button onclick="convertCode()">
+        Convert
+      </button>
+
+      <button
+        id="autoNamingToggle"
+        class="toggleButton"
+        onclick="toggleAutoNaming()"
+      >
+        Automatic Naming: ON
+      </button>
+
+      <button onclick="clearAll()">
+        Clear
+      </button>
+
+    </div>
+
+    <div class="editorWrap">
+
+      <div class="editor">
+
+        <div class="topbar">
+          Input
+        </div>
+
+        <textarea id="input"></textarea>
 
       </div>
 
-      <div class="editorWrap">
+      <div class="editor">
 
-        <div class="editor">
+        <div class="topbar">
 
-          <div class="topbar">
-            Input
-          </div>
+          Output
 
-          <textarea id="input"></textarea>
+          <button class="copyBtn" onclick="copyOutput()">
+            Copy
+          </button>
 
         </div>
 
-        <div class="editor">
-
-          <div class="topbar">
-
-            Output
-
-            <button onclick="copyOutput()">
-              Copy
-            </button>
-
-          </div>
-
-          <textarea
-            id="output"
-            readonly
-          ></textarea>
-
-        </div>
+        <textarea id="output" readonly></textarea>
 
       </div>
 
     </div>
 
-    <script>
+  </div>
 
-      let autoNaming = true
+  <script>
 
-      function toggleAutoNaming() {
+    let autoNaming = true
 
-        autoNaming = !autoNaming
+    function toggleAutoNaming() {
 
-        const btn =
-          document.getElementById(
-            "autoNamingToggle"
+      autoNaming = !autoNaming
+
+      const btn =
+        document.getElementById("autoNamingToggle")
+
+      if (autoNaming) {
+        btn.classList.remove("off")
+        btn.textContent = "Automatic Naming: ON"
+      } else {
+        btn.classList.add("off")
+        btn.textContent = "Automatic Naming: OFF"
+      }
+
+    }
+
+    function convertCode() {
+
+      let source =
+        document.getElementById("input").value
+
+      const autoNamingEnabled =
+        autoNaming
+
+      source = source.replace(/--\[\=[\s\S]*?\]\=]/g, "")
+      source = source.replace(/--\[\[[\s\S]*?\]\]/g, "")
+      source = source.replace(/--.*$/gm, "")
+
+      let varMap = {}
+      let classMap = {}
+      let parentMap = {}
+      let originalNames = {}
+
+      let match
+
+      const nameRegex =
+        /LMG2L\["(.*?)"\]\["Name"\]\s*=\s*\[\[(.*?)\]\]/g
+
+      while ((match = nameRegex.exec(source)) !== null) {
+        originalNames[match[1]] =
+          match[2].replace(/\W/g, "")
+      }
+
+      const instanceRegex =
+        /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\("([^"]+)"(?:,\s*(.*?))?\);/g
+
+      while ((match = instanceRegex.exec(source)) !== null) {
+
+        const id = match[1]
+        const className = match[2]
+        const parentRaw = match[3]
+
+        classMap[id] = className
+
+        if (parentRaw) {
+
+          const parentMatch =
+            parentRaw.match(/LMG2L\["(.*?)"\]/)
+
+          if (parentMatch) {
+            parentMap[id] = parentMatch[1]
+          }
+
+        }
+
+      }
+
+      const suffixMap = {
+        UICorner: "Corner",
+        UIStroke: "Stroke",
+        UIPadding: "Padding",
+        UIGradient: "Gradient",
+        UIListLayout: "Layout",
+        UIGridLayout: "Grid",
+        UIPageLayout: "Pages",
+        UISizeConstraint: "SC",
+        UITextSizeConstraint: "TSC",
+        UIAspectRatioConstraint: "ARC",
+        UIScale: "Scale",
+        UIFlexItem: "Flex"
+      }
+
+      function makeName(id) {
+
+        if (varMap[id]) return varMap[id]
+
+        const className = classMap[id]
+        const original = originalNames[id]
+        const parentId = parentMap[id]
+
+        const parentName =
+          parentId ? makeName(parentId) : ""
+
+        let finalName = ""
+        const special = suffixMap[className]
+
+        if (special) {
+          finalName = parentName ? parentName + special : special
+        } else {
+          finalName =
+            (original && original !== className)
+              ? original
+              : className
+        }
+
+        finalName = finalName.replace(/\W/g, "")
+
+        let base = finalName
+        let counter = 2
+
+        while (Object.values(varMap).includes(finalName)) {
+          finalName = base + counter
+          counter++
+        }
+
+        varMap[id] = finalName
+        return finalName
+      }
+
+      Object.keys(classMap).forEach(id => {
+        if (autoNamingEnabled) makeName(id)
+        else varMap[id] = originalNames[id] || classMap[id]
+      })
+
+      source = source.replace(/local\s+LMG2L\s*=\s*{}\s*;?/g, "")
+      source = source.replace(/return\s+.*$/gm, "")
+
+      source = source.replace(
+        /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\((.*?)\);?/g,
+        (_, id, content) => {
+
+          const name = varMap[id]
+
+          content = content.replace(
+            /LMG2L\["(.*?)"\]/g,
+            (_, ref) => varMap[ref]
           )
 
-        if (autoNaming) {
-
-          btn.classList.remove("off")
-
-          btn.textContent =
-            "Automatic Naming: ON"
-
-        } else {
-
-          btn.classList.add("off")
-
-          btn.textContent =
-            "Automatic Naming: OFF"
-
+          return `local ${name} = Instance.new(${content})`
         }
+      )
 
-      }
+      source = source.replace(
+        /LMG2L\["(.*?)"\]\["(.*?)"\]\s*=\s*(.*?)\s*;?$/gm,
+        (_, id, prop, value) => {
 
-      function convertCode() {
+          const name = varMap[id]
 
-        let source =
-          document.getElementById(
-            "input"
-          ).value
+          value = value.replace(
+            /LMG2L\["(.*?)"\]/g,
+            (_, ref) => varMap[ref]
+          )
 
-        const autoNamingEnabled =
-          autoNaming
+          if (value.trim() === "") return ""
 
-        source = source.replace(
-          /--\[\=[\s\S]*?\]\=]/g,
-          ""
-        )
-
-        source = source.replace(
-          /--\[\[[\s\S]*?\]\]/g,
-          ""
-        )
-
-        source = source.replace(
-          /--.*$/gm,
-          ""
-        )
-
-        let varMap = {}
-        let classMap = {}
-        let parentMap = {}
-        let originalNames = {}
-
-        let match
-
-        const nameRegex =
-          /LMG2L\["(.*?)"\]\["Name"\]\s*=\s*\[\[(.*?)\]\]/g
-
-        while (
-          (match = nameRegex.exec(source))
-          !== null
-        ) {
-
-          originalNames[match[1]] =
-            match[2]
-              .replace(/\W/g, "")
-
+          return `${name}.${prop} = ${value}`
         }
+      )
 
-        const instanceRegex =
-          /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\("([^"]+)"(?:,\s*(.*?))?\);/g
+      source = source.replace(/LMG2L\["(.*?)"\]/g, (_, id) => varMap[id])
+      source = source.replace(/\[\[(.*?)\]\]/gs, (_, t) => `"${t.replace(/"/g, '\\"')}"`)
+      source = source.replace(/;/g, "")
+      source = source.replace(/\n{3,}/g, "\n\n")
 
-        while (
-          (match = instanceRegex.exec(source))
-          !== null
-        ) {
+      document.getElementById("output").value = source.trim()
+    }
 
-          const id =
-            match[1]
+    function clearAll() {
+      document.getElementById("input").value = ""
+      document.getElementById("output").value = ""
+    }
 
-          const className =
-            match[2]
+    function copyOutput() {
+      navigator.clipboard.writeText(
+        document.getElementById("output").value
+      )
+    }
 
-          const parentRaw =
-            match[3]
+  </script>
 
-          classMap[id] =
-            className
-
-          if (parentRaw) {
-
-            const parentMatch =
-              parentRaw.match(
-                /LMG2L\["(.*?)"\]/
-              )
-
-            if (parentMatch) {
-
-              parentMap[id] =
-                parentMatch[1]
-
-            }
-
-          }
-
-        }
-
-        const suffixMap = {
-
-          UICorner: "Corner",
-
-          UIStroke: "Stroke",
-
-          UIPadding: "Padding",
-
-          UIGradient: "Gradient",
-
-          UIListLayout: "Layout",
-
-          UIGridLayout: "Grid",
-
-          UIPageLayout: "Pages",
-
-          UISizeConstraint: "SC",
-
-          UITextSizeConstraint: "TSC",
-
-          UIAspectRatioConstraint: "ARC",
-
-          UIScale: "Scale",
-
-          UIFlexItem: "Flex"
-
-        }
-
-        function makeName(id) {
-
-          if (varMap[id]) {
-            return varMap[id]
-          }
-
-          const className =
-            classMap[id]
-
-          const original =
-            originalNames[id]
-
-          const parentId =
-            parentMap[id]
-
-          const parentName =
-            parentId
-            ? makeName(parentId)
-            : ""
-
-          let finalName = ""
-
-          const special =
-            suffixMap[className]
-
-          if (special) {
-
-            if (parentName) {
-
-              finalName =
-                parentName + special
-
-            } else {
-
-              finalName =
-                special
-
-            }
-
-          } else {
-
-            if (
-              original &&
-              original !== className
-            ) {
-
-              finalName =
-                original
-
-            } else {
-
-              finalName =
-                className
-
-            }
-
-          }
-
-          finalName =
-            finalName.replace(
-              /\W/g,
-              ""
-            )
-
-          let base =
-            finalName
-
-          let counter = 2
-
-          while (
-            Object.values(varMap)
-              .includes(finalName)
-          ) {
-
-            finalName =
-              base + counter
-
-            counter++
-
-          }
-
-          varMap[id] =
-            finalName
-
-          return finalName
-
-        }
-
-        Object.keys(classMap)
-          .forEach(id => {
-
-            if (autoNamingEnabled) {
-
-              makeName(id)
-
-            } else {
-
-              varMap[id] =
-                originalNames[id]
-                || classMap[id]
-
-            }
-
-          })
-
-        source = source.replace(
-          /local\s+LMG2L\s*=\s*{}\s*;?/g,
-          ""
-        )
-
-        source = source.replace(
-          /return\s+.*$/gm,
-          ""
-        )
-
-        source = source.replace(
-          /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\((.*?)\);?/g,
-
-          (_, id, content) => {
-
-            const name =
-              varMap[id]
-
-            content =
-              content.replace(
-                /LMG2L\["(.*?)"\]/g,
-
-                (_, ref) =>
-                  varMap[ref]
-              )
-
-            return `local ${name} = Instance.new(${content})`
-          }
-        )
-
-        source = source.replace(
-          /LMG2L\["(.*?)"\]\["(.*?)"\]\s*=\s*(.*?)\s*;?$/gm,
-
-          (_, id, prop, value) => {
-
-            const name =
-              varMap[id]
-
-            value =
-              value.replace(
-                /LMG2L\["(.*?)"\]/g,
-
-                (_, ref) =>
-                  varMap[ref]
-              )
-
-            if (
-              value.trim() === ""
-            ) {
-              return ""
-            }
-
-            return `${name}.${prop} = ${value}`
-          }
-        )
-
-        source = source.replace(
-          /LMG2L\["(.*?)"\]/g,
-
-          (_, id) =>
-            varMap[id]
-        )
-
-        source = source.replace(
-          /\[\[(.*?)\]\]/gs,
-
-          (_, text) => {
-
-            return `"${text
-              .replace(/"/g, '\\"')
-            }"`
-
-          }
-        )
-
-        source = source.replace(
-          /;/g,
-          ""
-        )
-
-        source = source.replace(
-          /\n{3,}/g,
-          "\n\n"
-        )
-
-        document.getElementById(
-          "output"
-        ).value =
-          source.trim()
-
-      }
-
-      function clearAll() {
-
-        document.getElementById(
-          "input"
-        ).value = ""
-
-        document.getElementById(
-          "output"
-        ).value = ""
-
-      }
-
-      function copyOutput() {
-
-        navigator.clipboard.writeText(
-          document.getElementById(
-            "output"
-          ).value
-        )
-
-      }
-
-    </script>
-
-  </body>
+</body>
 </html>
