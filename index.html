@@ -4,32 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JustAGuest Tools</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="app">
+    <div class="glow glow1"></div>
+    <div class="glow glow2"></div>
 
-        <aside class="sidebar">
-            <div class="logo">
-                <h1>JustAGuest</h1>
-                <p>Luau Tools</p>
-            </div>
+    <div class="sidebar">
+        <div class="logo">
+            JustAGuest
+        </div>
 
-            <nav>
-                <a href="Tabs/Home.html">Home</a>
-                <a href="Tabs/LMG2Dot.html">LMG2Dot</a>
-            </nav>
-        </aside>
+        <button class="tabBtn active" data-tab="tabs/Home.html">
+            Home
+        </button>
 
-        <main class="content">
-            <div class="hero">
-                <h1>Welcome</h1>
-                <p>Select a tab from the sidebar.</p>
-            </div>
-        </main>
-
+        <button class="tabBtn" data-tab="tabs/LMG2Dot.html">
+            LMG2Dot
+        </button>
     </div>
+
+    <div class="main">
+        <iframe id="contentFrame" src="tabs/Home.html"></iframe>
+    </div>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
