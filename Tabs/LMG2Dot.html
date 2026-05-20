@@ -305,7 +305,7 @@
         }
 
         const instanceRegex =
-          /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\("([^"]+)"(?:,\s*(.*?))?\);/g
+          /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\("([^"]+)"(?:,\s*([\s\S]*?))?\);/g;
 
         while (
           (match = instanceRegex.exec(source))
