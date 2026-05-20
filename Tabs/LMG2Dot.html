@@ -249,6 +249,7 @@
             let classMap = {}
             let parentMap = {}
             let originalNames = {}
+            let usedNames = {}
 
             let match
 
@@ -292,24 +293,39 @@
 
             }
 
-            const shortNames = {
-                UISizeConstraint: "SC",
-                UITextSizeConstraint: "TSC",
-                UIAspectRatioConstraint: "ARC",
+            const suffixMap = {
                 UICorner: "Corner",
                 UIStroke: "Stroke",
                 UIPadding: "Padding",
                 UIGradient: "Gradient",
                 UIListLayout: "Layout",
                 UIGridLayout: "Grid",
-                UIPageLayout: "Pages"
+                UIPageLayout: "Pages",
+                UISizeConstraint: "SC",
+                UITextSizeConstraint: "TSC",
+                UIAspectRatioConstraint: "ARC",
+                UIScale: "Scale",
+                UIFlexItem: "Flex"
+            }
+
+            function getUnique(name) {
+
+                if (!usedNames[name]) {
+
+                    usedNames[name] = 1
+                    return name
+
+                }
+
+                usedNames[name]++
+
+                return name + usedNames[name]
+
             }
 
             function makeName(id) {
 
-                if (
-                    varMap[id]
-                ) {
+                if (varMap[id]) {
                     return varMap[id]
                 }
 
@@ -319,15 +335,14 @@
                 const original =
                     originalNames[id]
 
-                let finalName
+                let finalName = ""
 
                 if (
                     original &&
                     original !== className
                 ) {
 
-                    finalName =
-                        original
+                    finalName = original
 
                 } else {
 
@@ -339,41 +354,20 @@
                         ? makeName(parentId)
                         : ""
 
-                    const short =
-                        shortNames[className]
-                        || className
-
                     if (
-                        parentName &&
-                        short !== className
+                        suffixMap[className]
                     ) {
 
-                        finalName =
-                            parentName + short
-
-                    } else if (
-                        parentName &&
-                        (
-                            className === "TextLabel" ||
-                            className === "TextButton" ||
-                            className === "Frame" ||
-                            className === "ImageLabel" ||
-                            className === "ScrollingFrame"
-                        )
-                    ) {
-
-                        if (
-                            original &&
-                            original !== className
-                        ) {
+                        if (parentName) {
 
                             finalName =
-                                original
+                                parentName +
+                                suffixMap[className]
 
                         } else {
 
                             finalName =
-                                parentName + className
+                                suffixMap[className]
 
                         }
 
@@ -386,22 +380,11 @@
 
                 }
 
-                let counter = 2
-                let base = finalName
+                finalName =
+                    getUnique(finalName)
 
-                while (
-                    Object.values(varMap)
-                    .includes(finalName)
-                ) {
-
-                    finalName =
-                        base + counter
-
-                    counter++
-
-                }
-
-                varMap[id] = finalName
+                varMap[id] =
+                    finalName
 
                 return finalName
 
@@ -409,9 +392,7 @@
 
             Object.keys(classMap).forEach(id => {
 
-                if (
-                    autoNaming
-                ) {
+                if (autoNaming) {
 
                     makeName(id)
 
@@ -419,9 +400,7 @@
 
                     varMap[id] =
                         originalNames[id]
-                        || id
-                            .replace(/_\w+$/, "")
-                            .replace(/\W/g, "")
+                        || classMap[id]
 
                 }
 
