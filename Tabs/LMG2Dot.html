@@ -11,7 +11,6 @@
 
         body {
             margin: 0;
-
             padding: 30px;
 
             background: transparent;
@@ -37,7 +36,6 @@
 
         .sub {
             color: #94a3b8;
-
             margin-bottom: 10px;
         }
 
@@ -103,7 +101,6 @@
 
         .buttons {
             display: flex;
-
             gap: 12px;
         }
 
@@ -152,6 +149,7 @@
         </div>
 
         <div class="buttons">
+
             <button onclick="convertCode()">
                 Convert
             </button>
@@ -159,6 +157,7 @@
             <button onclick="clearAll()">
                 Clear
             </button>
+
         </div>
 
         <div class="editorWrap">
@@ -200,6 +199,7 @@
             let source =
                 document.getElementById("input").value
 
+            // remove multiline comments
             source = source.replace(
                 /--\[\=[\s\S]*?\]\=]/g,
                 ""
@@ -210,8 +210,15 @@
                 ""
             )
 
+            // remove single line comments
+            source = source.replace(
+                /--.*$/gm,
+                ""
+            )
+
             let varMap = {}
 
+            // find Name assignments
             let nameRegex =
                 /LMG2L\["(.*?)"\]\["Name"\]\s*=\s*\[\[(.*?)]]/g
 
@@ -220,10 +227,12 @@
             while ((match = nameRegex.exec(source)) !== null) {
 
                 varMap[match[1]] =
-                    match[2].replace(/\W/g, "")
+                    match[2]
+                    .replace(/\W/g, "")
 
             }
 
+            // fallback names
             let allRegex =
                 /LMG2L\["(.*?)"]/g
 
@@ -240,8 +249,15 @@
 
             }
 
+            // remove local LMG2L table
             source = source.replace(
-                /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\((.*?)\);/g,
+                /local\s+LMG2L\s*=\s*{}\s*/g,
+                ""
+            )
+
+            // convert Instance.new
+            source = source.replace(
+                /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\((.*?)\);?/g,
                 (_, id, content) => {
 
                     let name = varMap[id]
@@ -255,8 +271,9 @@
                 }
             )
 
+            // convert properties
             source = source.replace(
-                /LMG2L\["(.*?)"\]\["(.*?)"\]\s*=\s*(.*?);/g,
+                /LMG2L\["(.*?)"\]\["(.*?)"\]\s*=\s*(.*?);?$/gm,
                 (_, id, prop, value) => {
 
                     let name = varMap[id]
@@ -266,22 +283,43 @@
                         (_, ref) => varMap[ref]
                     )
 
+                    // remove empty properties
+                    if (
+                        value.trim() === ""
+                    ) {
+                        return ""
+                    }
+
                     return `${name}.${prop} = ${value}`
                 }
             )
 
+            // convert remaining references
             source = source.replace(
                 /LMG2L\["(.*?)"]/g,
                 (_, id) => varMap[id]
             )
 
+            // convert [[text]] to "text"
+            source = source.replace(
+                /=\s*\[\[(.*?)]]/g,
+                '= "$1"'
+            )
+
+            // remove semicolons
             source = source.replace(
                 /;\s*$/gm,
                 ""
             )
 
+            // remove excessive blank lines
+            source = source.replace(
+                /\n{3,}/g,
+                "\n\n"
+            )
+
             document.getElementById("output").value =
-                source
+                source.trim()
 
         }
 
