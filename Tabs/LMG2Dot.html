@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            padding: 30px;
+
+            background: transparent;
+
+            color: white;
+
+            font-family: Inter, sans-serif;
+        }
+
+        .container {
+            height: calc(100vh - 60px);
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 18px;
+        }
+
+        .title {
+            font-size: 42px;
+            font-weight: 700;
+        }
+
+        .sub {
+            color: #94a3b8;
+
+            margin-bottom: 10px;
+        }
+
+        .editorWrap {
+            flex: 1;
+
+            display: flex;
+
+            gap: 20px;
+        }
+
+        .editor {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+
+            background: rgba(255,255,255,0.04);
+
+            border: 1px solid rgba(255,255,255,0.08);
+
+            border-radius: 22px;
+
+            overflow: hidden;
+
+            backdrop-filter: blur(20px);
+
+            box-shadow:
+                0 0 30px rgba(59,130,246,0.12);
+        }
+
+        .topbar {
+            padding: 14px 18px;
+
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        textarea {
+            flex: 1;
+
+            resize: none;
+
+            border: none;
+            outline: none;
+
+            background: transparent;
+
+            color: white;
+
+            padding: 18px;
+
+            font-size: 14px;
+
+            font-family: Consolas, monospace;
+
+            text-align: left;
+        }
+
+        .buttons {
+            display: flex;
+
+            gap: 12px;
+        }
+
+        button {
+            border: none;
+
+            border-radius: 14px;
+
+            padding: 14px 22px;
+
+            background: linear-gradient(
+                135deg,
+                #3b82f6,
+                #9333ea
+            );
+
+            color: white;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 0 25px rgba(147,51,234,0.4);
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="title">
+            LMG2L/G2L To Dot Syntax Converter
+        </div>
+
+        <div class="sub">
+            Convert LocalMaze/G2L generated code into clean dot syntax.
+        </div>
+
+        <div class="buttons">
+            <button onclick="convertCode()">
+                Convert
+            </button>
+
+            <button onclick="clearAll()">
+                Clear
+            </button>
+        </div>
+
+        <div class="editorWrap">
+
+            <div class="editor">
+
+                <div class="topbar">
+                    Input
+                </div>
+
+                <textarea id="input"></textarea>
+
+            </div>
+
+            <div class="editor">
+
+                <div class="topbar">
+
+                    Output
+
+                    <button onclick="copyOutput()">
+                        Copy
+                    </button>
+
+                </div>
+
+                <textarea id="output" readonly></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function convertCode() {
+
+            let source =
+                document.getElementById("input").value
+
+            source = source.replace(
+                /--\[\=[\s\S]*?\]\=]/g,
+                ""
+            )
+
+            source = source.replace(
+                /--\[\[[\s\S]*?\]\]/g,
+                ""
+            )
+
+            let varMap = {}
+
+            let nameRegex =
+                /LMG2L\["(.*?)"\]\["Name"\]\s*=\s*\[\[(.*?)]]/g
+
+            let match
+
+            while ((match = nameRegex.exec(source)) !== null) {
+
+                varMap[match[1]] =
+                    match[2].replace(/\W/g, "")
+
+            }
+
+            let allRegex =
+                /LMG2L\["(.*?)"]/g
+
+            while ((match = allRegex.exec(source)) !== null) {
+
+                if (!varMap[match[1]]) {
+
+                    varMap[match[1]] =
+                        match[1]
+                        .replace(/_\d+$/, "")
+                        .replace(/\W/g, "")
+
+                }
+
+            }
+
+            source = source.replace(
+                /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\((.*?)\);/g,
+                (_, id, content) => {
+
+                    let name = varMap[id]
+
+                    content = content.replace(
+                        /LMG2L\["(.*?)"]/g,
+                        (_, ref) => varMap[ref]
+                    )
+
+                    return `local ${name} = Instance.new(${content})`
+                }
+            )
+
+            source = source.replace(
+                /LMG2L\["(.*?)"\]\["(.*?)"\]\s*=\s*(.*?);/g,
+                (_, id, prop, value) => {
+
+                    let name = varMap[id]
+
+                    value = value.replace(
+                        /LMG2L\["(.*?)"]/g,
+                        (_, ref) => varMap[ref]
+                    )
+
+                    return `${name}.${prop} = ${value}`
+                }
+            )
+
+            source = source.replace(
+                /LMG2L\["(.*?)"]/g,
+                (_, id) => varMap[id]
+            )
+
+            source = source.replace(
+                /;\s*$/gm,
+                ""
+            )
+
+            document.getElementById("output").value =
+                source
+
+        }
+
+        function clearAll() {
+
+            document.getElementById("input").value = ""
+
+            document.getElementById("output").value = ""
+
+        }
+
+        function copyOutput() {
+
+            navigator.clipboard.writeText(
+                document.getElementById("output").value
+            )
+
+        }
+
+    </script>
+
+</body>
+</html>
