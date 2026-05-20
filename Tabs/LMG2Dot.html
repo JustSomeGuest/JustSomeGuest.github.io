@@ -12,20 +12,15 @@
         body {
             margin: 0;
             padding: 30px;
-
             background: transparent;
-
             color: white;
-
             font-family: Inter, sans-serif;
         }
 
         .container {
             height: calc(100vh - 60px);
-
             display: flex;
             flex-direction: column;
-
             gap: 18px;
         }
 
@@ -41,62 +36,70 @@
 
         .editorWrap {
             flex: 1;
-
             display: flex;
-
             gap: 20px;
+            min-height: 0;
         }
 
         .editor {
             flex: 1;
-
             display: flex;
             flex-direction: column;
-
             background: rgba(255,255,255,0.04);
-
             border: 1px solid rgba(255,255,255,0.08);
-
             border-radius: 22px;
-
             overflow: hidden;
-
             backdrop-filter: blur(20px);
-
             box-shadow:
                 0 0 30px rgba(59,130,246,0.12);
         }
 
         .topbar {
             padding: 14px 18px;
-
             border-bottom: 1px solid rgba(255,255,255,0.08);
-
             display: flex;
-
             justify-content: space-between;
             align-items: center;
         }
 
         textarea {
             flex: 1;
-
             resize: none;
-
             border: none;
             outline: none;
-
             background: transparent;
-
             color: white;
-
             padding: 18px;
-
             font-size: 14px;
-
+            line-height: 1.5;
             font-family: Consolas, monospace;
-
             text-align: left;
+            overflow-y: auto;
+        }
+
+        textarea::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        textarea::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.03);
+        }
+
+        textarea::-webkit-scrollbar-thumb {
+            background: linear-gradient(
+                180deg,
+                #3b82f6,
+                #9333ea
+            );
+
+            border-radius: 999px;
+
+            box-shadow:
+                0 0 15px rgba(147,51,234,0.5);
+        }
+
+        textarea::-webkit-scrollbar-thumb:hover {
+            filter: brightness(1.2);
         }
 
         .buttons {
@@ -106,9 +109,7 @@
 
         button {
             border: none;
-
             border-radius: 14px;
-
             padding: 14px 22px;
 
             background: linear-gradient(
@@ -118,11 +119,8 @@
             );
 
             color: white;
-
             cursor: pointer;
-
             transition: 0.25s;
-
             font-weight: 600;
         }
 
@@ -199,7 +197,6 @@
             let source =
                 document.getElementById("input").value
 
-            // remove multiline comments
             source = source.replace(
                 /--\[\=[\s\S]*?\]\=]/g,
                 ""
@@ -210,7 +207,6 @@
                 ""
             )
 
-            // remove single line comments
             source = source.replace(
                 /--.*$/gm,
                 ""
@@ -218,7 +214,6 @@
 
             let varMap = {}
 
-            // find Name assignments
             let nameRegex =
                 /LMG2L\["(.*?)"\]\["Name"\]\s*=\s*\[\[(.*?)]]/g
 
@@ -232,7 +227,6 @@
 
             }
 
-            // fallback names
             let allRegex =
                 /LMG2L\["(.*?)"]/g
 
@@ -249,13 +243,16 @@
 
             }
 
-            // remove local LMG2L table
             source = source.replace(
-                /local\s+LMG2L\s*=\s*{}\s*/g,
+                /local\s+LMG2L\s*=\s*{}\s*;?/g,
                 ""
             )
 
-            // convert Instance.new
+            source = source.replace(
+                /return\s+.*$/gm,
+                ""
+            )
+
             source = source.replace(
                 /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\((.*?)\);?/g,
                 (_, id, content) => {
@@ -271,9 +268,8 @@
                 }
             )
 
-            // convert properties
             source = source.replace(
-                /LMG2L\["(.*?)"\]\["(.*?)"\]\s*=\s*(.*?);?$/gm,
+                /LMG2L\["(.*?)"\]\["(.*?)"\]\s*=\s*(.*?)\s*;?$/gm,
                 (_, id, prop, value) => {
 
                     let name = varMap[id]
@@ -283,7 +279,6 @@
                         (_, ref) => varMap[ref]
                     )
 
-                    // remove empty properties
                     if (
                         value.trim() === ""
                     ) {
@@ -294,25 +289,21 @@
                 }
             )
 
-            // convert remaining references
             source = source.replace(
                 /LMG2L\["(.*?)"]/g,
                 (_, id) => varMap[id]
             )
 
-            // convert [[text]] to "text"
             source = source.replace(
-                /=\s*\[\[(.*?)]]/g,
-                '= "$1"'
+                /\[\[(.*?)\]\]/g,
+                '"$1"'
             )
 
-            // remove semicolons
             source = source.replace(
-                /;\s*$/gm,
+                /;/g,
                 ""
             )
 
-            // remove excessive blank lines
             source = source.replace(
                 /\n{3,}/g,
                 "\n\n"
