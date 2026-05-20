@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Luau Cleaner</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background:
+        radial-gradient(circle at top, rgba(59,130,246,0.14), transparent 60%),
+        radial-gradient(circle at bottom, rgba(147,51,234,0.10), transparent 60%),
+        #0a0a0f;
+      color: white;
+      font-family: Inter, sans-serif;
+    }
+
+    .container {
+      height: calc(100vh - 48px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .title {
+      font-size: 46px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      text-shadow: 0 0 25px rgba(59,130,246,0.25);
+    }
+
+    .sub {
+      color: #94a3b8;
+      margin-top: -8px;
+      font-size: 16px;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 22px;
+      background: linear-gradient(135deg, #3b82f6, #9333ea);
+      color: white;
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-weight: 650;
+      box-shadow: 0 0 18px rgba(59,130,246,0.15);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px rgba(147,51,234,0.35);
+    }
+
+    .editorWrap {
+      flex: 1;
+      display: flex;
+      gap: 18px;
+      min-height: 0;
+    }
+
+    .editor {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      overflow: hidden;
+      backdrop-filter: blur(22px);
+      box-shadow:
+        0 0 35px rgba(59,130,246,0.12),
+        0 0 60px rgba(147,51,234,0.06);
+    }
+
+    .topbar {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+
+    textarea {
+      flex: 1;
+      resize: none;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: white;
+      padding: 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      font-family: Consolas, monospace;
+      overflow-y: auto;
+    }
+
+    .copyBtn {
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      background: rgba(59,130,246,0.25);
+      border: 1px solid rgba(147,51,234,0.35);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .copyBtn:hover {
+      transform: translateY(-1px);
+      background: rgba(59,130,246,0.35);
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="title">
+      Luau Comment Cleaner
+    </div>
+
+    <div class="sub">
+      Removes Luau comments and cleans empty lines automatically.
+    </div>
+
+    <div class="buttons">
+
+      <button onclick="cleanComments()">
+        Clean Code
+      </button>
+
+      <button onclick="clearAll()">
+        Clear
+      </button>
+
+    </div>
+
+    <div class="editorWrap">
+
+      <div class="editor">
+
+        <div class="topbar">
+          Input
+        </div>
+
+        <textarea id="input"></textarea>
+
+      </div>
+
+      <div class="editor">
+
+        <div class="topbar">
+
+          Output
+
+          <button class="copyBtn" onclick="copyOutput()">
+            Copy
+          </button>
+
+        </div>
+
+        <textarea id="output" readonly></textarea>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function cleanComments() {
+
+      let source = document.getElementById("input").value
+
+      source = source.replace(/--\[\[[\s\S]*?\]\]/g, "")
+      source = source.replace(/--.*$/gm, "")
+
+      source = source
+        .split("\n")
+        .filter(line => line.trim() !== "")
+        .join("\n")
+
+      document.getElementById("output").value = source.trim()
+    }
+
+    function clearAll() {
+      document.getElementById("input").value = ""
+      document.getElementById("output").value = ""
+    }
+
+    function copyOutput() {
+      navigator.clipboard.writeText(
+        document.getElementById("output").value
+      )
+    }
+
+  </script>
+
+</body>
+</html>
