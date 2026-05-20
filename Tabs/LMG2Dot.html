@@ -45,55 +45,34 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-
         background: rgba(255,255,255,0.04);
-
         border: 1px solid rgba(255,255,255,0.08);
-
         border-radius: 22px;
-
         overflow: hidden;
-
         backdrop-filter: blur(20px);
-
         box-shadow:
           0 0 30px rgba(59,130,246,0.12);
       }
 
       .topbar {
         padding: 14px 18px;
-
-        border-bottom:
-          1px solid rgba(255,255,255,0.08);
-
+        border-bottom: 1px solid rgba(255,255,255,0.08);
         display: flex;
-
         justify-content: space-between;
-
         align-items: center;
       }
 
       textarea {
         flex: 1;
-
         resize: none;
-
         border: none;
-
         outline: none;
-
         background: transparent;
-
         color: white;
-
         padding: 18px;
-
         font-size: 14px;
-
         line-height: 1.5;
-
         font-family: Consolas, monospace;
-
         overflow-y: auto;
       }
 
@@ -102,12 +81,10 @@
       }
 
       textarea::-webkit-scrollbar-track {
-        background:
-          rgba(255,255,255,0.03);
+        background: rgba(255,255,255,0.03);
       }
 
       textarea::-webkit-scrollbar-thumb {
-
         background: linear-gradient(
           180deg,
           #3b82f6,
@@ -122,21 +99,15 @@
 
       .buttons {
         display: flex;
-
         align-items: center;
-
         gap: 12px;
-
         flex-wrap: wrap;
       }
 
       button {
         border: none;
-
         border-radius: 14px;
-
         padding: 14px 22px;
-
         background: linear-gradient(
           135deg,
           #3b82f6,
@@ -144,16 +115,12 @@
         );
 
         color: white;
-
         cursor: pointer;
-
         transition: 0.25s;
-
         font-weight: 600;
       }
 
       button:hover {
-
         transform: translateY(-2px);
 
         box-shadow:
@@ -162,11 +129,8 @@
 
       .toggleButton {
         border: none;
-
         border-radius: 14px;
-
         padding: 14px 22px;
-
         background: linear-gradient(
           135deg,
           #3b82f6,
@@ -174,18 +138,13 @@
         );
 
         color: white;
-
         cursor: pointer;
-
         transition: 0.25s;
-
         font-weight: 600;
-
         user-select: none;
       }
 
       .toggleButton:hover {
-
         transform: translateY(-2px);
 
         box-shadow:
@@ -573,6 +532,24 @@
         )
 
         source = source.replace(
+          /local\s+(\w+)\s*=\s*Instance\.new\((.*?)\)/g,
+
+          (_, name, content) => {
+
+            return `local ${name} = Instance.new(${content})\n${name}.Parent = `
+          }
+        )
+
+        source = source.replace(
+          /local\s+(\w+)\s*=\s*Instance\.new\((.*?),\s*(.*?)\)/g,
+
+          (_, name, className, parent) => {
+
+            return `local ${name} = Instance.new(${className})\n${name}.Parent = ${parent}`
+          }
+        )
+
+        source = source.replace(
           /LMG2L\["(.*?)"\]/g,
 
           (_, id) =>
@@ -590,6 +567,62 @@
 
           }
         )
+
+        source = source.replace(
+          /(\w+)\.Parent =\s*$/gm,
+          ""
+        )
+
+        source = source.replace(
+          /local\s+(\w+)\s*=\s*Instance\.new\((.*?),\s*(.*?)\)/g,
+
+          (_, name, className, parent) => {
+
+            return `local ${name} = Instance.new(${className})`
+          }
+        )
+
+        const lines =
+          source.split("\n")
+
+        const parentLines = []
+
+        for (const line of lines) {
+
+          const match =
+            line.match(
+              /local\s+(\w+)\s*=\s*Instance\.new\((.*?),\s*(.*?)\)/
+            )
+
+          if (match) {
+
+            const name =
+              match[1]
+
+            const parent =
+              match[3]
+
+            parentLines.push(
+              `${name}.Parent = ${parent}`
+            )
+
+          }
+
+        }
+
+        source =
+          source.replace(
+            /local\s+(\w+)\s*=\s*Instance\.new\((.*?),\s*(.*?)\)/g,
+
+            (_, name, className) => {
+
+              return `local ${name} = Instance.new(${className})`
+            }
+          )
+
+        source +=
+          "\n\n" +
+          parentLines.join("\n")
 
         source = source.replace(
           /;/g,
