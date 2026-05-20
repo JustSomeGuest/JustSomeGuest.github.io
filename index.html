@@ -1,125 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Nebula Obfuscator</title>
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JustAGuest Tools</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 <body>
 
-    <div class="backgroundGlow"></div>
-
     <div class="app">
 
-        <div class="header">
-
-            <div class="logoBox">
-
-                <div class="logoGlow"></div>
-
-                <div class="logo">
-                    N
-                </div>
-
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>JustAGuest</h1>
+                <p>Luau Tools</p>
             </div>
 
-            <div>
+            <nav>
+                <a href="Tabs/Home.html">Home</a>
+                <a href="Tabs/LMG2Dot.html">LMG2Dot</a>
+            </nav>
+        </aside>
 
-                <h1>
-                    Nebula Obfuscator
-                </h1>
-
-                <p>
-                    Advanced Luau Protection
-                </p>
-
+        <main class="content">
+            <div class="hero">
+                <h1>Welcome</h1>
+                <p>Select a tab from the sidebar.</p>
             </div>
-
-        </div>
-
-        <div class="editorGrid">
-
-            <div class="editorCard">
-
-                <div class="editorTop">
-
-                    <span>
-                        Input Script
-                    </span>
-
-                </div>
-
-                <textarea
-                    id="input"
-                    placeholder="Paste your Luau script here..."
-                ></textarea>
-
-            </div>
-
-            <div class="editorCard">
-
-                <div class="editorTop">
-
-                    <span>
-                        Obfuscated Output
-                    </span>
-
-                    <button id="copyBtn">
-                        Copy
-                    </button>
-
-                </div>
-
-                <textarea
-                    id="output"
-                    readonly
-                    placeholder="Your obfuscated script will appear here..."
-                ></textarea>
-
-            </div>
-
-        </div>
-
-        <div class="bottomButtons">
-
-            <button id="obfuscateBtn">
-                Obfuscate Script
-            </button>
-
-            <button id="cleanBtn">
-                Clear
-            </button>
-
-        </div>
+        </main>
 
     </div>
-
-    <script src="script.js"></script>
 
 </body>
 </html>
