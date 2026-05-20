@@ -98,13 +98,11 @@
                 0 0 15px rgba(147,51,234,0.5);
         }
 
-        textarea::-webkit-scrollbar-thumb:hover {
-            filter: brightness(1.2);
-        }
-
         .buttons {
             display: flex;
+            align-items: center;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         button {
@@ -131,6 +129,25 @@
                 0 0 25px rgba(147,51,234,0.4);
         }
 
+        .toggleWrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            background: rgba(255,255,255,0.04);
+
+            border: 1px solid rgba(255,255,255,0.08);
+
+            padding: 10px 14px;
+
+            border-radius: 14px;
+        }
+
+        .toggleWrap input {
+            width: 18px;
+            height: 18px;
+        }
+
     </style>
 
 </head>
@@ -151,6 +168,20 @@
             <button onclick="convertCode()">
                 Convert
             </button>
+
+            <div class="toggleWrap">
+
+                <input
+                    type="checkbox"
+                    id="autoNaming"
+                    checked
+                >
+
+                <label for="autoNaming">
+                    Automatic Naming
+                </label>
+
+            </div>
 
             <button onclick="clearAll()">
                 Clear
@@ -197,6 +228,9 @@
             let source =
                 document.getElementById("input").value
 
+            const autoNaming =
+                document.getElementById("autoNaming").checked
+
             source = source.replace(
                 /--\[\=[\s\S]*?\]\=]/g,
                 ""
@@ -213,11 +247,40 @@
             )
 
             let varMap = {}
+            let parentMap = {}
+            let classMap = {}
+            let nameCounts = {}
+
+            let instanceRegex =
+                /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\("(.*?)",?\s*(.*?)?\)/g
+
+            let match
+
+            while ((match = instanceRegex.exec(source)) !== null) {
+
+                const id = match[1]
+                const className = match[2]
+                const parentRaw = match[3]
+
+                classMap[id] = className
+
+                if (parentRaw) {
+
+                    const parentMatch =
+                        parentRaw.match(/LMG2L\["(.*?)"]/)
+
+                    if (parentMatch) {
+
+                        parentMap[id] = parentMatch[1]
+
+                    }
+
+                }
+
+            }
 
             let nameRegex =
                 /LMG2L\["(.*?)"\]\["Name"\]\s*=\s*\[\[(.*?)]]/g
-
-            let match
 
             while ((match = nameRegex.exec(source)) !== null) {
 
@@ -227,21 +290,90 @@
 
             }
 
-            let allRegex =
-                /LMG2L\["(.*?)"]/g
+            function shorten(name) {
 
-            while ((match = allRegex.exec(source)) !== null) {
+                const shortMap = {
+                    UISizeConstraint: "SC",
+                    UIStroke: "Stroke",
+                    UICorner: "Corner",
+                    UIPadding: "Padding",
+                    UIListLayout: "Layout",
+                    UITextSizeConstraint: "TSC"
+                }
 
-                if (!varMap[match[1]]) {
+                return shortMap[name] || name
 
-                    varMap[match[1]] =
-                        match[1]
-                        .replace(/_\d+$/, "")
-                        .replace(/\W/g, "")
+            }
+
+            Object.keys(classMap).forEach(id => {
+
+                if (!autoNaming) {
+
+                    if (!varMap[id]) {
+
+                        varMap[id] =
+                            id
+                            .replace(/_\d+$/, "")
+                            .replace(/\W/g, "")
+
+                    }
+
+                    return
 
                 }
 
-            }
+                const className =
+                    classMap[id]
+
+                const short =
+                    shorten(className)
+
+                const parent =
+                    parentMap[id]
+
+                let finalName =
+                    short
+
+                if (parent) {
+
+                    const parentName =
+                        varMap[parent]
+
+                    if (
+                        parentName &&
+                        (
+                            short === "Corner" ||
+                            short === "Stroke" ||
+                            short === "Padding" ||
+                            short === "Layout" ||
+                            short === "SC" ||
+                            short === "TSC"
+                        )
+                    ) {
+
+                        finalName =
+                            parentName + short
+
+                    }
+
+                }
+
+                if (!nameCounts[finalName]) {
+
+                    nameCounts[finalName] = 1
+
+                } else {
+
+                    nameCounts[finalName]++
+
+                    finalName +=
+                        nameCounts[finalName]
+
+                }
+
+                varMap[id] = finalName
+
+            })
 
             source = source.replace(
                 /local\s+LMG2L\s*=\s*{}\s*;?/g,
