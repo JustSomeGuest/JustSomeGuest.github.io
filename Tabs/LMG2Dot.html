@@ -542,9 +542,7 @@
                   varMap[ref]
               )
 
-            return `
-local ${name} = Instance.new(${content})
-`
+            return `local ${name} = Instance.new(${content})`
           }
         )
 
@@ -570,9 +568,7 @@ local ${name} = Instance.new(${content})
               return ""
             }
 
-            return `
-${name}.${prop} = ${value}
-`
+            return `${name}.${prop} = ${value}`
           }
         )
 
