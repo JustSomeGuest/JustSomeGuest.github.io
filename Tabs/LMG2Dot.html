@@ -73,7 +73,6 @@
             font-size: 14px;
             line-height: 1.5;
             font-family: Consolas, monospace;
-            text-align: left;
             overflow-y: auto;
         }
 
@@ -247,14 +246,25 @@
             )
 
             let varMap = {}
-            let parentMap = {}
             let classMap = {}
-            let nameCounts = {}
-
-            let instanceRegex =
-                /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\("(.*?)",?\s*(.*?)?\)/g
+            let parentMap = {}
+            let originalNames = {}
 
             let match
+
+            const nameRegex =
+                /LMG2L\["(.*?)"\]\["Name"\]\s*=\s*\[\[(.*?)\]\]/g
+
+            while ((match = nameRegex.exec(source)) !== null) {
+
+                originalNames[match[1]] =
+                    match[2]
+                    .replace(/\W/g, "")
+
+            }
+
+            const instanceRegex =
+                /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\("([^"]+)"(?:,\s*(.*?))?\);/g
 
             while ((match = instanceRegex.exec(source)) !== null) {
 
@@ -267,11 +277,14 @@
                 if (parentRaw) {
 
                     const parentMatch =
-                        parentRaw.match(/LMG2L\["(.*?)"]/)
+                        parentRaw.match(
+                            /LMG2L\["(.*?)"\]/
+                        )
 
                     if (parentMatch) {
 
-                        parentMap[id] = parentMatch[1]
+                        parentMap[id] =
+                            parentMatch[1]
 
                     }
 
@@ -279,99 +292,138 @@
 
             }
 
-            let nameRegex =
-                /LMG2L\["(.*?)"\]\["Name"\]\s*=\s*\[\[(.*?)]]/g
-
-            while ((match = nameRegex.exec(source)) !== null) {
-
-                varMap[match[1]] =
-                    match[2]
-                    .replace(/\W/g, "")
-
+            const shortNames = {
+                UISizeConstraint: "SC",
+                UITextSizeConstraint: "TSC",
+                UIAspectRatioConstraint: "ARC",
+                UICorner: "Corner",
+                UIStroke: "Stroke",
+                UIPadding: "Padding",
+                UIGradient: "Gradient",
+                UIListLayout: "Layout",
+                UIGridLayout: "Grid",
+                UIPageLayout: "Pages"
             }
 
-            function shorten(name) {
+            function makeName(id) {
 
-                const shortMap = {
-                    UISizeConstraint: "SC",
-                    UIStroke: "Stroke",
-                    UICorner: "Corner",
-                    UIPadding: "Padding",
-                    UIListLayout: "Layout",
-                    UITextSizeConstraint: "TSC"
-                }
-
-                return shortMap[name] || name
-
-            }
-
-            Object.keys(classMap).forEach(id => {
-
-                if (!autoNaming) {
-
-                    if (!varMap[id]) {
-
-                        varMap[id] =
-                            id
-                            .replace(/_\d+$/, "")
-                            .replace(/\W/g, "")
-
-                    }
-
-                    return
-
+                if (
+                    varMap[id]
+                ) {
+                    return varMap[id]
                 }
 
                 const className =
                     classMap[id]
 
-                const short =
-                    shorten(className)
+                const original =
+                    originalNames[id]
 
-                const parent =
-                    parentMap[id]
+                let finalName
 
-                let finalName =
-                    short
+                if (
+                    original &&
+                    original !== className
+                ) {
 
-                if (parent) {
+                    finalName =
+                        original
+
+                } else {
+
+                    const parentId =
+                        parentMap[id]
 
                     const parentName =
-                        varMap[parent]
+                        parentId
+                        ? makeName(parentId)
+                        : ""
+
+                    const short =
+                        shortNames[className]
+                        || className
 
                     if (
                         parentName &&
-                        (
-                            short === "Corner" ||
-                            short === "Stroke" ||
-                            short === "Padding" ||
-                            short === "Layout" ||
-                            short === "SC" ||
-                            short === "TSC"
-                        )
+                        short !== className
                     ) {
 
                         finalName =
                             parentName + short
 
+                    } else if (
+                        parentName &&
+                        (
+                            className === "TextLabel" ||
+                            className === "TextButton" ||
+                            className === "Frame" ||
+                            className === "ImageLabel" ||
+                            className === "ScrollingFrame"
+                        )
+                    ) {
+
+                        if (
+                            original &&
+                            original !== className
+                        ) {
+
+                            finalName =
+                                original
+
+                        } else {
+
+                            finalName =
+                                parentName + className
+
+                        }
+
+                    } else {
+
+                        finalName =
+                            className
+
                     }
 
                 }
 
-                if (!nameCounts[finalName]) {
+                let counter = 2
+                let base = finalName
 
-                    nameCounts[finalName] = 1
+                while (
+                    Object.values(varMap)
+                    .includes(finalName)
+                ) {
 
-                } else {
+                    finalName =
+                        base + counter
 
-                    nameCounts[finalName]++
-
-                    finalName +=
-                        nameCounts[finalName]
+                    counter++
 
                 }
 
                 varMap[id] = finalName
+
+                return finalName
+
+            }
+
+            Object.keys(classMap).forEach(id => {
+
+                if (
+                    autoNaming
+                ) {
+
+                    makeName(id)
+
+                } else {
+
+                    varMap[id] =
+                        originalNames[id]
+                        || id
+                            .replace(/_\w+$/, "")
+                            .replace(/\W/g, "")
+
+                }
 
             })
 
@@ -389,14 +441,18 @@
                 /LMG2L\["(.*?)"\]\s*=\s*Instance\.new\((.*?)\);?/g,
                 (_, id, content) => {
 
-                    let name = varMap[id]
+                    const name =
+                        varMap[id]
 
-                    content = content.replace(
-                        /LMG2L\["(.*?)"]/g,
-                        (_, ref) => varMap[ref]
-                    )
+                    content =
+                        content.replace(
+                            /LMG2L\["(.*?)"\]/g,
+                            (_, ref) =>
+                                varMap[ref]
+                        )
 
                     return `local ${name} = Instance.new(${content})`
+
                 }
             )
 
@@ -404,31 +460,44 @@
                 /LMG2L\["(.*?)"\]\["(.*?)"\]\s*=\s*(.*?)\s*;?$/gm,
                 (_, id, prop, value) => {
 
-                    let name = varMap[id]
+                    const name =
+                        varMap[id]
 
-                    value = value.replace(
-                        /LMG2L\["(.*?)"]/g,
-                        (_, ref) => varMap[ref]
-                    )
+                    value =
+                        value.replace(
+                            /LMG2L\["(.*?)"\]/g,
+                            (_, ref) =>
+                                varMap[ref]
+                        )
 
                     if (
                         value.trim() === ""
                     ) {
+
                         return ""
+
                     }
 
                     return `${name}.${prop} = ${value}`
+
                 }
             )
 
             source = source.replace(
-                /LMG2L\["(.*?)"]/g,
-                (_, id) => varMap[id]
+                /LMG2L\["(.*?)"\]/g,
+                (_, id) =>
+                    varMap[id]
             )
 
             source = source.replace(
-                /\[\[(.*?)\]\]/g,
-                '"$1"'
+                /\[\[(.*?)\]\]/gs,
+                (_, text) => {
+
+                    return `"${text
+                        .replace(/"/g, '\\"')
+                    }"`
+
+                }
             )
 
             source = source.replace(
