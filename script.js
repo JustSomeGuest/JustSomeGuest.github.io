@@ -6,7 +6,7 @@ const overlay = document.getElementById("overlay")
 
 buttons.forEach(button => {
 
-    button.onclick = () => {
+    button.addEventListener("click", () => {
 
         buttons.forEach(btn => btn.classList.remove("active"))
         button.classList.add("active")
@@ -18,20 +18,20 @@ buttons.forEach(button => {
             overlay.classList.remove("open")
         }
 
-    }
+    })
 
 })
 
-menuBtn.onclick = () => {
+menuBtn.addEventListener("click", () => {
 
     sidebar.classList.toggle("open")
     overlay.classList.toggle("open")
 
-}
+})
 
-overlay.onclick = () => {
+overlay.addEventListener("click", () => {
 
     sidebar.classList.remove("open")
     overlay.classList.remove("open")
 
-}
+})
