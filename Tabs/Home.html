@@ -27,11 +27,12 @@ body{
 }
 
 .card{
-    width:min(900px,100%);
+    width:min(950px,100%);
 
     background:#111827;
 
     border:1px solid #23304d;
+
     border-radius:24px;
 
     padding:50px;
@@ -43,27 +44,44 @@ body{
 }
 
 h1{
-    font-size:clamp(36px,6vw,52px);
-    font-weight:800;
+    font-size:clamp(38px,6vw,54px);
 
     color:#60a5fa;
 
-    margin-bottom:20px;
+    font-weight:800;
+
+    margin-bottom:25px;
 }
 
-p{
-    color:#9ca3af;
+.description{
+    color:#d1d5db;
 
-    font-size:20px;
+    font-size:18px;
+
+    line-height:1.8;
 
     margin-bottom:40px;
+}
 
-    line-height:1.5;
+.description b{
+    color:white;
+}
+
+.sectionTitle{
+    font-size:22px;
+
+    color:#60a5fa;
+
+    font-weight:700;
+
+    margin-bottom:25px;
 }
 
 .links{
     display:flex;
+
     justify-content:center;
+
     gap:25px;
 
     flex-wrap:wrap;
@@ -94,15 +112,15 @@ p{
 .linkCard img{
     width:100%;
 
-    border-radius:16px;
-
     display:block;
+
+    border-radius:16px;
 }
 
-.subtext{
+.footer{
     margin-top:40px;
 
-    color:#6b7280;
+    color:#9ca3af;
 
     font-size:14px;
 }
@@ -113,8 +131,8 @@ p{
         padding:30px;
     }
 
-    p{
-        font-size:17px;
+    .description{
+        font-size:16px;
     }
 
     .linkCard{
@@ -130,11 +148,37 @@ p{
 
 <div class="card">
 
-    <h1>Welcome to AquaLua</h1>
+    <h1>AquaLua</h1>
 
-    <p>
-        I build Luau tools, converters, and utilities for Roblox developers.
-    </p>
+    <div class="description">
+
+        AquaLua is a collection of useful tools made for Roblox developers.
+
+        <br><br>
+
+        <b>Currently available:</b>
+
+        <br>
+
+        • LMG2L / G2L To Lua Converter
+
+        <br>
+
+        • Comment Cleaner
+
+        <br><br>
+
+        More tools are planned and will be added over time.
+
+        <br><br>
+
+        Created by <b>JustAGuest</b>.
+
+    </div>
+
+    <div class="sectionTitle">
+        Visit my profiles
+    </div>
 
     <div class="links">
 
@@ -156,7 +200,7 @@ p{
 
     </div>
 
-    <div class="subtext">
+    <div class="footer">
         More tools coming soon.
     </div>
 
