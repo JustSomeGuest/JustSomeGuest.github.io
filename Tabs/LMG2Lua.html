@@ -140,13 +140,45 @@ button:hover{
 
     align-items:center;
 
-    justify-content:space-between;
+    gap:12px;
 
     border-bottom:1px solid #23304d;
 
     color:#d1d5db;
 
     font-weight:600;
+}
+
+.copyBtn{
+    margin-left:auto;
+
+    height:36px;
+
+    padding:0 14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#172033;
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+    background .15s,
+    transform .15s;
+}
+
+.copyBtn:hover{
+    background:#1e3a5f;
+
+    transform:translateY(-1px);
 }
 
 textarea{
@@ -191,18 +223,6 @@ textarea::-webkit-scrollbar-thumb{
 
 textarea::-webkit-scrollbar-thumb:hover{
     background:#2563eb;
-}
-
-.copyBtn{
-    padding:10px 14px;
-
-    border-radius:12px;
-
-    background:#172033;
-}
-
-.copyBtn:hover{
-    background:#1e3a5f;
 }
 
 @media(max-width:900px){
@@ -290,7 +310,10 @@ textarea::-webkit-scrollbar-thumb:hover{
 
                 Output
 
-                <button class="copyBtn" onclick="copyOutput()">
+                <button
+                    class="copyBtn"
+                    onclick="copyOutput()"
+                >
                     Copy
                 </button>
 
@@ -311,7 +334,7 @@ textarea::-webkit-scrollbar-thumb:hover{
 <script>
 
 let autoNaming = true
-    
+
 function toggleAutoNaming() {
 
     autoNaming = !autoNaming
@@ -415,9 +438,14 @@ function convertCode() {
 
         }
 
-        const className = classMap[id]
-        const original = originalNames[id]
-        const parentId = parentMap[id]
+        const className =
+            classMap[id]
+
+        const original =
+            originalNames[id]
+
+        const parentId =
+            parentMap[id]
 
         const parentName =
             parentId ? makeName(parentId) : ""
@@ -595,9 +623,7 @@ function clearAll() {
 function copyOutput() {
 
     navigator.clipboard.writeText(
-
         document.getElementById("output").value
-
     )
 
 }
