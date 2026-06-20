@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JustLuauTools</title>
+    <title>AquaLua</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,14 +13,22 @@
 </head>
 <body>
 
-    <div class="glow glow1"></div>
-    <div class="glow glow2"></div>
+    <div class="topbar">
+        <button id="menuBtn">☰</button>
 
-    <button id="menuBtn">☰</button>
+        <div class="mobileTitleContainer">
+            <div class="mobileTitle">
+                AquaLua
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
 
     <div class="sidebar" id="sidebar">
+
         <div class="logo">
-            JustLuauTools
+            AquaLua
         </div>
 
         <button class="tabBtn active" data-tab="Tabs/Home.html">
@@ -34,6 +42,7 @@
         <button class="tabBtn" data-tab="Tabs/CommentCleaner.html">
             Comment Cleaner
         </button>
+
     </div>
 
     <div class="main">
