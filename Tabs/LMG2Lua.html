@@ -18,13 +18,17 @@
 body{
     background:#0b1120;
     color:white;
+
     padding:20px;
+
+    overflow-y:auto;
 }
 
 .container{
-    height:calc(100vh - 40px);
+    min-height:calc(100vh - 40px);
 
     display:flex;
+
     flex-direction:column;
 
     gap:20px;
@@ -81,6 +85,7 @@ button{
     border-radius:16px;
 
     font-size:15px;
+
     font-weight:600;
 
     cursor:pointer;
@@ -103,17 +108,15 @@ button:hover{
 }
 
 .editorWrap{
-    flex:1;
-
     display:flex;
 
     gap:20px;
-
-    min-height:0;
 }
 
 .editor{
     flex:1;
+
+    min-height:500px;
 
     display:flex;
 
@@ -126,8 +129,6 @@ button:hover{
     border-radius:24px;
 
     overflow:hidden;
-
-    min-height:0;
 }
 
 .topbar{
@@ -163,11 +164,11 @@ textarea{
 
     padding:20px;
 
-    font-family:Consolas,monospace;
-
     font-size:14px;
 
     line-height:1.6;
+
+    font-family:Consolas,monospace;
 }
 
 textarea::placeholder{
@@ -198,8 +199,6 @@ textarea::-webkit-scrollbar-thumb:hover{
     border-radius:12px;
 
     background:#172033;
-
-    font-size:13px;
 }
 
 .copyBtn:hover{
@@ -214,6 +213,10 @@ textarea::-webkit-scrollbar-thumb:hover{
 
     .editorWrap{
         flex-direction:column;
+    }
+
+    .editor{
+        min-height:400px;
     }
 
     .buttons{
@@ -308,11 +311,7 @@ textarea::-webkit-scrollbar-thumb:hover{
 <script>
 
 let autoNaming = true
-
-<script>
-
-let autoNaming = true
-
+    
 function toggleAutoNaming() {
 
     autoNaming = !autoNaming
@@ -416,14 +415,9 @@ function convertCode() {
 
         }
 
-        const className =
-            classMap[id]
-
-        const original =
-            originalNames[id]
-
-        const parentId =
-            parentMap[id]
+        const className = classMap[id]
+        const original = originalNames[id]
+        const parentId = parentMap[id]
 
         const parentName =
             parentId ? makeName(parentId) : ""
