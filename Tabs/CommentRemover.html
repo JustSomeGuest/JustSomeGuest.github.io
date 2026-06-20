@@ -1,222 +1,383 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Luau Cleaner</title>
+<title>Luau Comment Cleaner</title>
 
-  <style>
+<style>
 
-    * {
-      box-sizing: border-box;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,sans-serif;
+}
+
+body{
+    background:#0b1120;
+    color:white;
+
+    padding:20px;
+
+    overflow-y:auto;
+}
+
+.container{
+    min-height:calc(100vh - 40px);
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+}
+
+.header{
+    background:#111827;
+
+    border:1px solid #23304d;
+
+    border-radius:24px;
+
+    padding:30px;
+
+    box-shadow:
+    0 8px 30px rgba(0,0,0,.3);
+}
+
+.title{
+    font-size:clamp(34px,5vw,52px);
+
+    font-weight:800;
+
+    color:#60a5fa;
+
+    margin-bottom:10px;
+}
+
+.sub{
+    color:#9ca3af;
+
+    line-height:1.7;
+
+    font-size:16px;
+}
+
+.buttons{
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+}
+
+button{
+    border:none;
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:14px 22px;
+
+    border-radius:16px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+    background .15s,
+    transform .15s;
+}
+
+button:hover{
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+}
+
+.editorWrap{
+    display:flex;
+
+    gap:20px;
+}
+
+.editor{
+    flex:1;
+
+    min-height:500px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    background:#111827;
+
+    border:1px solid #23304d;
+
+    border-radius:24px;
+
+    overflow:hidden;
+}
+
+.topbar{
+    height:60px;
+
+    padding:0 20px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    border-bottom:1px solid #23304d;
+
+    color:#d1d5db;
+
+    font-weight:600;
+}
+
+.copyBtn{
+    margin-left:auto;
+
+    width:70px;
+
+    height:38px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:0;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#172033;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+        background .15s,
+        transform .15s;
+}
+
+.copyBtn:hover{
+    background:#1e3a5f;
+
+    transform:translateY(-1px);
+}
+
+textarea{
+    flex:1;
+
+    resize:none;
+
+    border:none;
+
+    outline:none;
+
+    background:#111827;
+
+    color:white;
+
+    padding:20px;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+    font-family:Consolas,monospace;
+}
+
+textarea::placeholder{
+    color:#6b7280;
+}
+
+textarea::-webkit-scrollbar{
+    width:10px;
+}
+
+textarea::-webkit-scrollbar-track{
+    background:#111827;
+}
+
+textarea::-webkit-scrollbar-thumb{
+    background:#23304d;
+
+    border-radius:999px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover{
+    background:#2563eb;
+}
+
+@media(max-width:900px){
+
+    body{
+        padding:15px;
     }
 
-    body {
-      margin: 0;
-      padding: 24px;
-      background:
-        radial-gradient(circle at top, rgba(59,130,246,0.14), transparent 60%),
-        radial-gradient(circle at bottom, rgba(147,51,234,0.10), transparent 60%),
-        #0a0a0f;
-      color: white;
-      font-family: Inter, sans-serif;
+    .editorWrap{
+        flex-direction:column;
     }
 
-    .container {
-      height: calc(100vh - 48px);
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
+    .editor{
+        min-height:400px;
     }
 
-    .title {
-      font-size: 46px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      text-shadow: 0 0 25px rgba(59,130,246,0.25);
+    .buttons{
+        flex-direction:column;
     }
 
-    .sub {
-      color: #94a3b8;
-      margin-top: -8px;
-      font-size: 16px;
+    button{
+        width:100%;
     }
 
-    .buttons {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
+}
 
-    button {
-      border: none;
-      border-radius: 14px;
-      padding: 14px 22px;
-      background: linear-gradient(135deg, #3b82f6, #9333ea);
-      color: white;
-      cursor: pointer;
-      transition: 0.2s ease;
-      font-weight: 650;
-      box-shadow: 0 0 18px rgba(59,130,246,0.15);
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 28px rgba(147,51,234,0.35);
-    }
-
-    .editorWrap {
-      flex: 1;
-      display: flex;
-      gap: 18px;
-      min-height: 0;
-    }
-
-    .editor {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 24px;
-      overflow: hidden;
-      backdrop-filter: blur(22px);
-      box-shadow:
-        0 0 35px rgba(59,130,246,0.12),
-        0 0 60px rgba(147,51,234,0.06);
-    }
-
-    .topbar {
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      color: #e2e8f0;
-    }
-
-    textarea {
-      flex: 1;
-      resize: none;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: white;
-      padding: 18px;
-      font-size: 14px;
-      line-height: 1.5;
-      font-family: Consolas, monospace;
-      overflow-y: auto;
-    }
-
-    .copyBtn {
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 13px;
-      background: rgba(59,130,246,0.25);
-      border: 1px solid rgba(147,51,234,0.35);
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .copyBtn:hover {
-      transform: translateY(-1px);
-      background: rgba(59,130,246,0.35);
-    }
-
-  </style>
+</style>
 
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <div class="title">
-      Luau Comment Cleaner
-    </div>
+<div class="header">
 
-    <div class="sub">
-      Removes Luau comments and cleans empty lines automatically.
-    </div>
+<div class="title">
+Luau Comment Cleaner
+</div>
 
-    <div class="buttons">
+<div class="sub">
+Remove Luau comments and automatically clean empty lines.
+</div>
 
-      <button onclick="cleanComments()">
-        Clean Code
-      </button>
+</div>
 
-      <button onclick="clearAll()">
-        Clear
-      </button>
+<div class="buttons">
 
-    </div>
+<button onclick="cleanComments()">
+Clean Code
+</button>
 
-    <div class="editorWrap">
+<button onclick="clearAll()">
+Clear
+</button>
 
-      <div class="editor">
+</div>
 
-        <div class="topbar">
-          Input
-        </div>
+<div class="editorWrap">
 
-        <textarea id="input"></textarea>
+<div class="editor">
 
-      </div>
+<div class="topbar">
+Input
+</div>
 
-      <div class="editor">
+<textarea
+id="input"
+placeholder="Paste your Luau code here..."
+></textarea>
 
-        <div class="topbar">
+</div>
 
-          Output
+<div class="editor">
 
-          <button class="copyBtn" onclick="copyOutput()">
-            Copy
-          </button>
+<div class="topbar">
 
-        </div>
+Output
 
-        <textarea id="output" readonly></textarea>
+<button
+class="copyBtn"
+onclick="copyOutput()"
+>
+Copy
+</button>
 
-      </div>
+</div>
 
-    </div>
+<textarea
+id="output"
+readonly
+placeholder="Cleaned code will appear here..."
+></textarea>
 
-  </div>
+</div>
 
-  <script>
+</div>
 
-    function cleanComments() {
+</div>
 
-      let source = document.getElementById("input").value
+<script>
+function cleanComments() {
 
-      source = source.replace(/--\[\[[\s\S]*?\]\]/g, "")
-      source = source.replace(/--.*$/gm, "")
+    let source =
+        document.getElementById("input").value
 
-      source = source
-        .split("\n")
-        .filter(line => line.trim() !== "")
-        .join("\n")
+    source =
+        source.replace(
+            /--\[\[[\s\S]*?\]\]/g,
+            ""
+        )
 
-      document.getElementById("output").value = source.trim()
-    }
+    source =
+        source.replace(
+            /--.*$/gm,
+            ""
+        )
 
-    function clearAll() {
-      document.getElementById("input").value = ""
-      document.getElementById("output").value = ""
-    }
+    source =
+        source
+            .split("\n")
+            .filter(
+                line =>
+                    line.trim() !== ""
+            )
+            .join("\n")
 
-    function copyOutput() {
-      navigator.clipboard.writeText(
+    document.getElementById("output").value =
+        source.trim()
+
+}
+
+function clearAll() {
+
+    document.getElementById("input").value =
+        ""
+
+    document.getElementById("output").value =
+        ""
+
+}
+
+function copyOutput() {
+
+    navigator.clipboard.writeText(
+
         document.getElementById("output").value
-      )
-    }
 
-  </script>
+    )
+
+}
+
+</script>
 
 </body>
 </html>
