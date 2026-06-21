@@ -140,8 +140,6 @@ h1{
     font-size:14px;
 }
 
-/* ===================== MUSIC PLAYER ===================== */
-
 .player{
     text-align:left;
 
@@ -183,85 +181,6 @@ h1{
 
     white-space:nowrap;
 }
-
-/* ---- lyrics ---- */
-
-.lyricsBox{
-    position:relative;
-
-    height:130px;
-
-    margin-top:25px;
-
-    overflow:hidden;
-
-    -webkit-mask-image:linear-gradient(to bottom,transparent,black 30%,black 70%,transparent);
-    mask-image:linear-gradient(to bottom,transparent,black 30%,black 70%,transparent);
-}
-
-.lyricsInner{
-    position:absolute;
-
-    top:50%;
-    left:0;
-    right:0;
-
-    transform:translateY(-50%);
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:14px;
-}
-
-.lyricLine{
-    font-size:18px;
-    font-weight:600;
-
-    color:#4b5563;
-
-    filter:blur(2px);
-
-    opacity:.4;
-
-    transition:.25s;
-
-    text-align:center;
-}
-
-.lyricLine.near{
-    color:#9ca3af;
-
-    filter:blur(.6px);
-
-    opacity:.7;
-}
-
-.lyricLine.active{
-    color:#60a5fa;
-
-    filter:blur(0);
-
-    opacity:1;
-
-    font-size:21px;
-}
-
-.noLyrics{
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    height:100%;
-
-    color:#6b7280;
-
-    font-size:15px;
-    font-style:italic;
-}
-
-/* ---- seek bar ---- */
 
 .seekRow{
     margin-top:25px;
@@ -308,8 +227,6 @@ input[type="range"].seek::-webkit-slider-thumb{
     cursor:pointer;
 }
 
-/* ---- controls ---- */
-
 .controls{
     display:flex;
 
@@ -354,7 +271,9 @@ input[type="range"].seek::-webkit-slider-thumb{
     width:70px;
     height:70px;
 
-    font-size:26px;
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:2px;
 
     background:#1e3a5f;
 }
@@ -379,8 +298,6 @@ input[type="range"].seek::-webkit-slider-thumb{
 
     pointer-events:none;
 }
-
-/* ---- volume ---- */
 
 .volumeRow{
     display:flex;
@@ -454,7 +371,7 @@ input[type="range"].seek::-webkit-slider-thumb{
         width:60px;
         height:60px;
 
-        font-size:22px;
+        font-size:18px;
     }
 
 }
@@ -528,10 +445,6 @@ input[type="range"].seek::-webkit-slider-thumb{
         <div class="songDuration" id="songDuration">0:00</div>
     </div>
 
-    <div class="lyricsBox" id="lyricsBox">
-        <div class="lyricsInner" id="lyricsInner"></div>
-    </div>
-
     <div class="seekRow">
         <div class="timeRow">
             <span id="currentTime">0:00</span>
@@ -541,11 +454,11 @@ input[type="range"].seek::-webkit-slider-thumb{
     </div>
 
     <div class="controls">
-        <div class="ctrlBtn" id="prevBtn" title="Previous song">⏮</div>
-        <div class="ctrlBtn skip" id="rewindBtn" title="Back 30s">↺<span class="lbl">30</span></div>
-        <div class="ctrlBtn play" id="playBtn" title="Play / Pause">▶</div>
-        <div class="ctrlBtn skip" id="forwardBtn" title="Forward 30s">↻<span class="lbl">30</span></div>
-        <div class="ctrlBtn" id="nextBtn" title="Next song">⏭</div>
+        <div class="ctrlBtn" id="prevBtn" title="Previous song">⏮︎</div>
+        <div class="ctrlBtn skip" id="rewindBtn" title="Back 30s">↺︎<span class="lbl">30</span></div>
+        <div class="ctrlBtn play" id="playBtn" title="Play / Pause">▶︎</div>
+        <div class="ctrlBtn skip" id="forwardBtn" title="Forward 30s">↻︎<span class="lbl">30</span></div>
+        <div class="ctrlBtn" id="nextBtn" title="Next song">⏭︎</div>
     </div>
 
     <div class="volumeRow">
@@ -560,26 +473,16 @@ input[type="range"].seek::-webkit-slider-thumb{
 
 <script>
 
-/*
-    Add songs here. Each entry needs:
-    name    - song title
-    author  - artist name
-    url     - direct link to the mp3 file
-    lyrics  - array of { t: secondsIntoSong, line: "lyric text" }
-              leave empty [] if you don't have lyrics yet
-*/
 const songs = [
     {
         name: "From The Start",
         author: "Laufey",
-        url: "https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest.github.io/main/Assets/From%20The%20Start.mp3",
-        lyrics: []
+        url: "https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest.github.io/main/Assets/From%20The%20Start.mp3"
     },
     {
         name: "Falling Behind",
-        author: "Unknown",
-        url: "https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest.github.io/main/Assets/Falling%20Behind.mp3",
-        lyrics: []
+        author: "Laufey",
+        url: "https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest.github.io/main/Assets/Falling%20Behind.mp3"
     }
 ];
 
@@ -596,8 +499,6 @@ const nextBtn = document.getElementById("nextBtn");
 const rewindBtn = document.getElementById("rewindBtn");
 const forwardBtn = document.getElementById("forwardBtn");
 const volumeInput = document.getElementById("volumeInput");
-const lyricsBox = document.getElementById("lyricsBox");
-const lyricsInner = document.getElementById("lyricsInner");
 
 let currentIndex = 0;
 let isSeeking = false;
@@ -607,50 +508,6 @@ function formatTime(seconds){
     const m = Math.floor(seconds / 60);
     const s = Math.floor(seconds % 60);
     return m + ":" + (s < 10 ? "0" + s : s);
-}
-
-function renderLyrics(lyrics){
-    lyricsInner.innerHTML = "";
-
-    if(!lyrics || lyrics.length === 0){
-        const empty = document.createElement("div");
-        empty.className = "noLyrics";
-        empty.textContent = "No lyrics added for this song yet.";
-        lyricsInner.appendChild(empty);
-        return;
-    }
-
-    lyrics.forEach(item => {
-        const line = document.createElement("div");
-        line.className = "lyricLine";
-        line.textContent = item.line;
-        lyricsInner.appendChild(line);
-    });
-}
-
-function updateActiveLyric(){
-    const lyrics = songs[currentIndex].lyrics;
-    if(!lyrics || lyrics.length === 0) return;
-
-    const t = audio.currentTime;
-    let activeIndex = 0;
-
-    for(let i = 0; i < lyrics.length; i++){
-        if(t >= lyrics[i].t) activeIndex = i;
-    }
-
-    const lineEls = lyricsInner.querySelectorAll(".lyricLine");
-    lineEls.forEach((el, i) => {
-        el.classList.remove("active", "near");
-        if(i === activeIndex) el.classList.add("active");
-        else if(Math.abs(i - activeIndex) === 1) el.classList.add("near");
-    });
-
-    const activeEl = lineEls[activeIndex];
-    if(activeEl){
-        const offset = activeEl.offsetTop - (lyricsInner.offsetHeight / 2) + (activeEl.offsetHeight / 2);
-        lyricsInner.style.transform = "translateY(calc(-50% - " + offset + "px))";
-    }
 }
 
 function updateNavButtons(){
@@ -666,7 +523,6 @@ function loadSong(index, autoplay){
     songAuthor.textContent = song.author;
     audio.src = song.url;
 
-    renderLyrics(song.lyrics);
     updateNavButtons();
 
     seekBar.value = 0;
@@ -676,19 +532,19 @@ function loadSong(index, autoplay){
 
     if(autoplay){
         audio.play();
-        playBtn.textContent = "⏸";
+        playBtn.textContent = "| |";
     } else {
-        playBtn.textContent = "▶";
+        playBtn.textContent = "▶︎";
     }
 }
 
 function togglePlay(){
     if(audio.paused){
         audio.play();
-        playBtn.textContent = "⏸";
+        playBtn.textContent = "| |";
     } else {
         audio.pause();
-        playBtn.textContent = "▶";
+        playBtn.textContent = "▶︎";
     }
 }
 
@@ -720,14 +576,13 @@ audio.addEventListener("timeupdate", () => {
         seekBar.value = (audio.currentTime / audio.duration) * 100;
     }
     currentTimeEl.textContent = formatTime(audio.currentTime);
-    updateActiveLyric();
 });
 
 audio.addEventListener("ended", () => {
     if(currentIndex < songs.length - 1){
         loadSong(currentIndex + 1, true);
     } else {
-        playBtn.textContent = "▶";
+        playBtn.textContent = "▶︎";
     }
 });
 
