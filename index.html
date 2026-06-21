@@ -4,18 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AquaLuau</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-content">
+            <h1 class="splash-title">AquaLuau</h1>
+            <p class="splash-desc">Click anywhere to open</p>
+        </div>
+    </div>
+
     <div class="topbar">
         <button id="menuBtn">☰</button>
-
         <div class="mobileTitleContainer">
             <div class="mobileTitle">
                 AquaLuau
@@ -26,30 +30,29 @@
     <div class="overlay" id="overlay"></div>
 
     <div class="sidebar" id="sidebar">
-
         <div class="logo">
             AquaLuau
         </div>
-
         <button class="tabBtn active" data-tab="Tabs/Home.html">
             Home
         </button>
-
         <button class="tabBtn" data-tab="Tabs/LMG2Luau.html">
             LMG2L To Luau
         </button>
-
         <button class="tabBtn" data-tab="Tabs/CommentRemover.html">
             Comment Remover
         </button>
-
     </div>
 
     <div class="main">
+        <div id="frameLoader" class="frame-loader">
+            <div class="spinner"></div>
+        </div>
         <iframe id="contentFrame" src="Tabs/Home.html"></iframe>
     </div>
 
-    <script src="script.js"></script>
+    <audio id="globalAudioPlayer"></audio>
 
+    <script src="script.js"></script>
 </body>
 </html>
