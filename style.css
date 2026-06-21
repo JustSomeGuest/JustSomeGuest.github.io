@@ -21,6 +21,7 @@ body{
 
 .sidebar{
     position:fixed;
+
     left:20px;
     top:20px;
 
@@ -36,48 +37,40 @@ body{
 
     z-index:100;
 
-    box-shadow:0 8px 30px rgba(0,0,0,.35);
+    box-shadow:
+    0 8px 30px rgba(0,0,0,.35);
 
     transition:left .2s;
 }
 
 .logo{
+    width:100%;
+
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:10px;
 
-    margin-bottom:35px;
-
-    overflow:hidden;
-}
-
-.logoImg{
-    width:32px;
-    height:32px;
-
-    min-width:32px;
-    min-height:32px;
-
-    max-width:32px;
-    max-height:32px;
-
-    object-fit:contain;
-
-    flex:none;
-
-    display:block;
-}
-
-.logoText{
     font-size:clamp(24px,2vw,34px);
     font-weight:800;
 
     color:#60a5fa;
 
-    white-space:nowrap;
+    margin-bottom:35px;
 
+    white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
+}
+
+.logoIcon{
+    width:32px;
+    height:32px;
+
+    flex-shrink:0;
+
+    object-fit:contain;
+
+    border-radius:8px;
 }
 
 .tabBtn{
@@ -130,7 +123,8 @@ iframe{
 
     background:#172033;
 
-    box-shadow:0 8px 30px rgba(0,0,0,.3);
+    box-shadow:
+    0 8px 30px rgba(0,0,0,.3);
 }
 
 @media(max-width:768px){
@@ -178,34 +172,19 @@ iframe{
         flex:1;
 
         display:flex;
-        align-items:center;
         justify-content:center;
-
-        gap:10px;
 
         overflow:hidden;
 
         padding-right:42px;
     }
 
-    .mobileLogo{
-        width:28px;
-        height:28px;
-
-        min-width:28px;
-        min-height:28px;
-
-        max-width:28px;
-        max-height:28px;
-
-        object-fit:contain;
-
-        flex:none;
-
-        display:block;
-    }
-
     .mobileTitle{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+
         font-size:clamp(20px,6vw,30px);
         font-weight:800;
 
@@ -268,4 +247,5 @@ iframe{
     iframe{
         border-radius:20px;
     }
+
 }
