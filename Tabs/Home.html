@@ -21,8 +21,10 @@ body{
     min-height:100vh;
 
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center;
+    gap:30px;
 
     padding:20px;
 }
@@ -138,6 +140,290 @@ h1{
     font-size:14px;
 }
 
+/* ===================== MUSIC PLAYER ===================== */
+
+.player{
+    text-align:left;
+
+    padding:35px 40px;
+}
+
+.playerTop{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:20px;
+}
+
+.songName{
+    font-size:24px;
+
+    font-weight:800;
+
+    color:white;
+}
+
+.songAuthor{
+    font-size:16px;
+
+    color:#9ca3af;
+
+    margin-top:4px;
+}
+
+.songDuration{
+    font-size:20px;
+
+    color:#9ca3af;
+
+    font-weight:600;
+
+    white-space:nowrap;
+}
+
+/* ---- lyrics ---- */
+
+.lyricsBox{
+    position:relative;
+
+    height:130px;
+
+    margin-top:25px;
+
+    overflow:hidden;
+
+    -webkit-mask-image:linear-gradient(to bottom,transparent,black 30%,black 70%,transparent);
+    mask-image:linear-gradient(to bottom,transparent,black 30%,black 70%,transparent);
+}
+
+.lyricsInner{
+    position:absolute;
+
+    top:50%;
+    left:0;
+    right:0;
+
+    transform:translateY(-50%);
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+}
+
+.lyricLine{
+    font-size:18px;
+    font-weight:600;
+
+    color:#4b5563;
+
+    filter:blur(2px);
+
+    opacity:.4;
+
+    transition:.25s;
+
+    text-align:center;
+}
+
+.lyricLine.near{
+    color:#9ca3af;
+
+    filter:blur(.6px);
+
+    opacity:.7;
+}
+
+.lyricLine.active{
+    color:#60a5fa;
+
+    filter:blur(0);
+
+    opacity:1;
+
+    font-size:21px;
+}
+
+.noLyrics{
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    height:100%;
+
+    color:#6b7280;
+
+    font-size:15px;
+    font-style:italic;
+}
+
+/* ---- seek bar ---- */
+
+.seekRow{
+    margin-top:25px;
+}
+
+.timeRow{
+    display:flex;
+
+    justify-content:space-between;
+
+    font-size:13px;
+
+    color:#9ca3af;
+
+    margin-bottom:6px;
+}
+
+input[type="range"].seek{
+    width:100%;
+
+    height:6px;
+
+    border-radius:99px;
+
+    background:#23304d;
+
+    outline:none;
+
+    -webkit-appearance:none;
+
+    accent-color:#34d399;
+}
+
+input[type="range"].seek::-webkit-slider-thumb{
+    -webkit-appearance:none;
+
+    width:14px;
+    height:14px;
+
+    border-radius:50%;
+
+    background:#34d399;
+
+    cursor:pointer;
+}
+
+/* ---- controls ---- */
+
+.controls{
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:18px;
+
+    margin-top:30px;
+}
+
+.ctrlBtn{
+    width:60px;
+    height:60px;
+
+    border-radius:16px;
+
+    background:#172033;
+
+    border:1px solid #23304d;
+
+    color:white;
+
+    font-size:22px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+
+    transition:.15s;
+
+    user-select:none;
+}
+
+.ctrlBtn:hover{
+    background:#1e3a5f;
+}
+
+.ctrlBtn.play{
+    width:70px;
+    height:70px;
+
+    font-size:26px;
+
+    background:#1e3a5f;
+}
+
+.ctrlBtn.skip{
+    flex-direction:column;
+    gap:0;
+    font-size:18px;
+}
+
+.ctrlBtn.skip span.lbl{
+    font-size:10px;
+    font-weight:700;
+    color:#9ca3af;
+    margin-top:-2px;
+}
+
+.ctrlBtn.disabled{
+    opacity:.35;
+
+    cursor:default;
+
+    pointer-events:none;
+}
+
+/* ---- volume ---- */
+
+.volumeRow{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    margin-top:25px;
+}
+
+.volumeRow label{
+    font-size:13px;
+
+    color:#9ca3af;
+}
+
+.volumeRow input[type="text"]{
+    width:60px;
+
+    text-align:center;
+
+    background:#0b1120;
+
+    border:1px solid #23304d;
+
+    color:white;
+
+    border-radius:10px;
+
+    padding:6px 4px;
+
+    font-size:14px;
+}
+
+.volumeRow input[type="text"]:focus{
+    outline:none;
+
+    border-color:#60a5fa;
+}
+
 @media(max-width:768px){
 
     .card{
@@ -151,6 +437,24 @@ h1{
     .linkCard{
         width:100%;
         max-width:320px;
+    }
+
+    .player{
+        padding:25px 20px;
+    }
+
+    .ctrlBtn{
+        width:50px;
+        height:50px;
+
+        font-size:18px;
+    }
+
+    .ctrlBtn.play{
+        width:60px;
+        height:60px;
+
+        font-size:22px;
     }
 
 }
@@ -213,6 +517,246 @@ h1{
     </div>
 
 </div>
+
+<div class="card player">
+
+    <div class="playerTop">
+        <div>
+            <div class="songName" id="songName">-</div>
+            <div class="songAuthor" id="songAuthor">-</div>
+        </div>
+        <div class="songDuration" id="songDuration">0:00</div>
+    </div>
+
+    <div class="lyricsBox" id="lyricsBox">
+        <div class="lyricsInner" id="lyricsInner"></div>
+    </div>
+
+    <div class="seekRow">
+        <div class="timeRow">
+            <span id="currentTime">0:00</span>
+            <span id="totalTime">0:00</span>
+        </div>
+        <input type="range" class="seek" id="seekBar" min="0" max="100" value="0">
+    </div>
+
+    <div class="controls">
+        <div class="ctrlBtn" id="prevBtn" title="Previous song">⏮</div>
+        <div class="ctrlBtn skip" id="rewindBtn" title="Back 30s">↺<span class="lbl">30</span></div>
+        <div class="ctrlBtn play" id="playBtn" title="Play / Pause">▶</div>
+        <div class="ctrlBtn skip" id="forwardBtn" title="Forward 30s">↻<span class="lbl">30</span></div>
+        <div class="ctrlBtn" id="nextBtn" title="Next song">⏭</div>
+    </div>
+
+    <div class="volumeRow">
+        <label for="volumeInput">Volume</label>
+        <input type="text" id="volumeInput" value="100">
+        <label>%</label>
+    </div>
+
+</div>
+
+<audio id="audioPlayer"></audio>
+
+<script>
+
+/*
+    Add songs here. Each entry needs:
+    name    - song title
+    author  - artist name
+    url     - direct link to the mp3 file
+    lyrics  - array of { t: secondsIntoSong, line: "lyric text" }
+              leave empty [] if you don't have lyrics yet
+*/
+const songs = [
+    {
+        name: "From The Start",
+        author: "Laufey",
+        url: "https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest.github.io/main/Assets/From%20The%20Start.mp3",
+        lyrics: []
+    },
+    {
+        name: "Falling Behind",
+        author: "Unknown",
+        url: "https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest.github.io/main/Assets/Falling%20Behind.mp3",
+        lyrics: []
+    }
+];
+
+const audio = document.getElementById("audioPlayer");
+const songName = document.getElementById("songName");
+const songAuthor = document.getElementById("songAuthor");
+const songDuration = document.getElementById("songDuration");
+const currentTimeEl = document.getElementById("currentTime");
+const totalTimeEl = document.getElementById("totalTime");
+const seekBar = document.getElementById("seekBar");
+const playBtn = document.getElementById("playBtn");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const rewindBtn = document.getElementById("rewindBtn");
+const forwardBtn = document.getElementById("forwardBtn");
+const volumeInput = document.getElementById("volumeInput");
+const lyricsBox = document.getElementById("lyricsBox");
+const lyricsInner = document.getElementById("lyricsInner");
+
+let currentIndex = 0;
+let isSeeking = false;
+
+function formatTime(seconds){
+    if(!isFinite(seconds) || seconds < 0) seconds = 0;
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return m + ":" + (s < 10 ? "0" + s : s);
+}
+
+function renderLyrics(lyrics){
+    lyricsInner.innerHTML = "";
+
+    if(!lyrics || lyrics.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "noLyrics";
+        empty.textContent = "No lyrics added for this song yet.";
+        lyricsInner.appendChild(empty);
+        return;
+    }
+
+    lyrics.forEach(item => {
+        const line = document.createElement("div");
+        line.className = "lyricLine";
+        line.textContent = item.line;
+        lyricsInner.appendChild(line);
+    });
+}
+
+function updateActiveLyric(){
+    const lyrics = songs[currentIndex].lyrics;
+    if(!lyrics || lyrics.length === 0) return;
+
+    const t = audio.currentTime;
+    let activeIndex = 0;
+
+    for(let i = 0; i < lyrics.length; i++){
+        if(t >= lyrics[i].t) activeIndex = i;
+    }
+
+    const lineEls = lyricsInner.querySelectorAll(".lyricLine");
+    lineEls.forEach((el, i) => {
+        el.classList.remove("active", "near");
+        if(i === activeIndex) el.classList.add("active");
+        else if(Math.abs(i - activeIndex) === 1) el.classList.add("near");
+    });
+
+    const activeEl = lineEls[activeIndex];
+    if(activeEl){
+        const offset = activeEl.offsetTop - (lyricsInner.offsetHeight / 2) + (activeEl.offsetHeight / 2);
+        lyricsInner.style.transform = "translateY(calc(-50% - " + offset + "px))";
+    }
+}
+
+function updateNavButtons(){
+    prevBtn.classList.toggle("disabled", currentIndex === 0);
+    nextBtn.classList.toggle("disabled", currentIndex === songs.length - 1);
+}
+
+function loadSong(index, autoplay){
+    currentIndex = index;
+    const song = songs[currentIndex];
+
+    songName.textContent = song.name;
+    songAuthor.textContent = song.author;
+    audio.src = song.url;
+
+    renderLyrics(song.lyrics);
+    updateNavButtons();
+
+    seekBar.value = 0;
+    currentTimeEl.textContent = "0:00";
+    songDuration.textContent = "0:00";
+    totalTimeEl.textContent = "0:00";
+
+    if(autoplay){
+        audio.play();
+        playBtn.textContent = "⏸";
+    } else {
+        playBtn.textContent = "▶";
+    }
+}
+
+function togglePlay(){
+    if(audio.paused){
+        audio.play();
+        playBtn.textContent = "⏸";
+    } else {
+        audio.pause();
+        playBtn.textContent = "▶";
+    }
+}
+
+playBtn.addEventListener("click", togglePlay);
+
+prevBtn.addEventListener("click", () => {
+    if(currentIndex > 0) loadSong(currentIndex - 1, true);
+});
+
+nextBtn.addEventListener("click", () => {
+    if(currentIndex < songs.length - 1) loadSong(currentIndex + 1, true);
+});
+
+rewindBtn.addEventListener("click", () => {
+    audio.currentTime = Math.max(0, audio.currentTime - 30);
+});
+
+forwardBtn.addEventListener("click", () => {
+    audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 30);
+});
+
+audio.addEventListener("loadedmetadata", () => {
+    songDuration.textContent = formatTime(audio.duration);
+    totalTimeEl.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener("timeupdate", () => {
+    if(!isSeeking && audio.duration){
+        seekBar.value = (audio.currentTime / audio.duration) * 100;
+    }
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+    updateActiveLyric();
+});
+
+audio.addEventListener("ended", () => {
+    if(currentIndex < songs.length - 1){
+        loadSong(currentIndex + 1, true);
+    } else {
+        playBtn.textContent = "▶";
+    }
+});
+
+seekBar.addEventListener("input", () => {
+    isSeeking = true;
+    if(audio.duration){
+        currentTimeEl.textContent = formatTime((seekBar.value / 100) * audio.duration);
+    }
+});
+
+seekBar.addEventListener("change", () => {
+    if(audio.duration){
+        audio.currentTime = (seekBar.value / 100) * audio.duration;
+    }
+    isSeeking = false;
+});
+
+volumeInput.addEventListener("change", () => {
+    let val = parseInt(volumeInput.value, 10);
+    if(isNaN(val)) val = 100;
+    val = Math.min(100, Math.max(0, val));
+    volumeInput.value = val;
+    audio.volume = val / 100;
+});
+
+audio.volume = 1;
+loadSong(0, false);
+
+</script>
 
 </body>
 </html>
