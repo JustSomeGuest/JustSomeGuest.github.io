@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>AquaLuau</title>
-
 <style>
 *{
     margin:0;
@@ -17,52 +15,36 @@
 body{
     background:#0b1120;
     color:white;
-
     min-height:100vh;
-
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
     gap:30px;
-
     padding:20px;
 }
 
 .card{
     width:min(950px,100%);
-
     background:#111827;
-
     border:1px solid #23304d;
-
     border-radius:24px;
-
     padding:50px;
-
     text-align:center;
-
-    box-shadow:
-    0 8px 30px rgba(0,0,0,.3);
+    box-shadow: 0 8px 30px rgba(0,0,0,.3);
 }
 
 h1{
     font-size:clamp(38px,6vw,54px);
-
     color:#60a5fa;
-
     font-weight:800;
-
     margin-bottom:25px;
 }
 
 .description{
     color:#d1d5db;
-
     font-size:18px;
-
     line-height:1.8;
-
     margin-bottom:40px;
 }
 
@@ -72,113 +54,81 @@ h1{
 
 .toolList{
     width:fit-content;
-
     margin:20px auto;
-
     text-align:left;
-
     color:#d1d5db;
-
     line-height:1.8;
 }
 
 .sectionTitle{
     font-size:22px;
-
     color:#60a5fa;
-
     font-weight:700;
-
     margin-bottom:25px;
 }
 
 .links{
     display:flex;
-
     justify-content:center;
-
     gap:25px;
-
     flex-wrap:wrap;
 }
 
 .linkCard{
     width:280px;
-
     background:#172033;
-
     border:1px solid #23304d;
-
     border-radius:20px;
-
     padding:20px;
-
     text-decoration:none;
-
     transition:.15s;
 }
 
 .linkCard:hover{
     background:#1e3a5f;
-
     transform:translateY(-3px);
 }
 
 .linkCard img{
     width:100%;
-
     display:block;
-
     border-radius:16px;
 }
 
 .footer{
     margin-top:40px;
-
     color:#9ca3af;
-
     font-size:14px;
 }
 
 .player{
     text-align:left;
-
     padding:35px 40px;
 }
 
 .playerTop{
     display:flex;
-
     justify-content:space-between;
-
     align-items:flex-start;
-
     gap:20px;
 }
 
 .songName{
     font-size:24px;
-
     font-weight:800;
-
     color:white;
 }
 
 .songAuthor{
     font-size:16px;
-
     color:#9ca3af;
-
     margin-top:4px;
 }
 
 .songDuration{
     font-size:20px;
-
     color:#9ca3af;
-
     font-weight:600;
-
     white-space:nowrap;
 }
 
@@ -188,27 +138,18 @@ h1{
 
 .timeRow{
     display:flex;
-
     justify-content:space-between;
-
     font-size:13px;
-
     color:#9ca3af;
-
     margin-bottom:6px;
 }
 
 input[type="range"].seek{
     width:100%;
-
     height:6px;
-
     border-radius:99px;
-
     background:#23304d;
-
     outline:none;
-
     -webkit-appearance:none;
     -moz-appearance:none;
     appearance:none;
@@ -216,87 +157,59 @@ input[type="range"].seek{
 
 input[type="range"].seek::-webkit-slider-runnable-track{
     height:6px;
-
     border-radius:99px;
-
     background:transparent;
 }
 
 input[type="range"].seek::-webkit-slider-thumb{
     -webkit-appearance:none;
-
     box-sizing:border-box;
-
     width:14px;
     height:14px;
-
     border-radius:50%;
-
     background:#34d399;
-
     border:2px solid #0b1120;
-
     cursor:pointer;
-
     margin-top:-4px;
 }
 
 input[type="range"].seek::-moz-range-track{
     height:6px;
-
     border-radius:99px;
-
     background:transparent;
 }
 
 input[type="range"].seek::-moz-range-thumb{
     box-sizing:border-box;
-
     width:14px;
     height:14px;
-
     border-radius:50%;
-
     background:#34d399;
-
     border:2px solid #0b1120;
-
     cursor:pointer;
 }
 
 .controls{
     display:flex;
-
     align-items:center;
     justify-content:center;
-
     gap:18px;
-
     margin-top:30px;
 }
 
 .ctrlBtn{
     width:60px;
     height:60px;
-
     border-radius:16px;
-
     background:#172033;
-
     border:1px solid #23304d;
-
     color:white;
-
     font-size:22px;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     cursor:pointer;
-
     transition:.15s;
-
     user-select:none;
 }
 
@@ -307,11 +220,9 @@ input[type="range"].seek::-moz-range-thumb{
 .ctrlBtn.play{
     width:70px;
     height:70px;
-
     font-size:22px;
     font-weight:700;
     letter-spacing:2px;
-
     background:#1e3a5f;
 }
 
@@ -330,150 +241,96 @@ input[type="range"].seek::-moz-range-thumb{
 
 .ctrlBtn.disabled{
     opacity:.35;
-
     cursor:default;
-
     pointer-events:none;
 }
 
 .volumeRow{
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     gap:10px;
-
     margin-top:25px;
 }
 
 .volumeRow label{
     font-size:13px;
-
     color:#9ca3af;
 }
 
 .volumeRow input[type="text"]{
     width:60px;
-
     text-align:center;
-
     background:#0b1120;
-
     border:1px solid #23304d;
-
     color:white;
-
     border-radius:10px;
-
     padding:6px 4px;
-
     font-size:14px;
 }
 
 .volumeRow input[type="text"]:focus{
     outline:none;
-
     border-color:#60a5fa;
 }
 
 @media(max-width:768px){
-
     .card{
         padding:30px;
     }
-
     .description{
         font-size:16px;
     }
-
     .linkCard{
         width:100%;
         max-width:320px;
     }
-
     .player{
         padding:25px 20px;
     }
-
     .ctrlBtn{
         width:50px;
         height:50px;
-
         font-size:18px;
     }
-
     .ctrlBtn.play{
         width:60px;
         height:60px;
-
         font-size:18px;
     }
-
 }
 </style>
-
 </head>
 <body>
 
 <div class="card">
-
     <h1>AquaLuau</h1>
-
     <div class="description">
-
         AquaLuau is a collection of useful tools made for Roblox developers.
-
         <br><br>
-
         <b>Currently available:</b>
-
         <div class="toolList">
             <div>• LMG2L / G2L To Luau Converter</div>
             <div>• Comment Remover</div>
         </div>
-
         More tools are planned and will be added over time.
-
         <br><br>
-
         Created by <b>JustAGuest</b>.
-
     </div>
 
-    <div class="sectionTitle">
-        Visit my profiles
-    </div>
-
+    <div class="sectionTitle">Visit my profiles</div>
     <div class="links">
-
-        <a class="linkCard"
-        href="https://rscripts.net/@justaguest"
-        target="_blank">
-
+        <a class="linkCard" href="https://rscripts.net/@justaguest" target="_blank">
             <img src="https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest/main/Assets/RScripts.png">
-
         </a>
-
-        <a class="linkCard"
-        href="https://robloxscripts.com/user/justaguest"
-        target="_blank">
-
+        <a class="linkCard" href="https://robloxscripts.com/user/justaguest" target="_blank">
             <img src="https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest/main/Assets/RobloxScripts.png">
-
         </a>
-
     </div>
-
-    <div class="footer">
-        More tools coming soon.
-    </div>
-
+    <div class="footer">More tools coming soon.</div>
 </div>
 
 <div class="card player">
-
     <div class="playerTop">
         <div>
             <div class="songName" id="songName">-</div>
@@ -491,11 +348,11 @@ input[type="range"].seek::-moz-range-thumb{
     </div>
 
     <div class="controls">
-        <div class="ctrlBtn" id="prevBtn" title="Previous song">⏮︎</div>
-        <div class="ctrlBtn skip" id="rewindBtn" title="Back 30s">↺︎<span class="lbl">30</span></div>
-        <div class="ctrlBtn play" id="playBtn" title="Play / Pause">▶︎</div>
-        <div class="ctrlBtn skip" id="forwardBtn" title="Forward 30s">↻︎<span class="lbl">30</span></div>
-        <div class="ctrlBtn" id="nextBtn" title="Next song">⏭︎</div>
+        <div class="ctrlBtn" id="prevBtn">⏮︎</div>
+        <div class="ctrlBtn skip" id="rewindBtn">↺︎<span class="lbl">30</span></div>
+        <div class="ctrlBtn play" id="playBtn">▶︎</div>
+        <div class="ctrlBtn skip" id="forwardBtn">↻︎<span class="lbl">30</span></div>
+        <div class="ctrlBtn" id="nextBtn">⏭︎</div>
     </div>
 
     <div class="volumeRow">
@@ -503,27 +360,12 @@ input[type="range"].seek::-moz-range-thumb{
         <input type="text" id="volumeInput" value="100">
         <label>%</label>
     </div>
-
 </div>
 
-<audio id="audioPlayer"></audio>
-
 <script>
+const audio = window.parent.document.getElementById("globalAudioPlayer");
+const songs = window.parent.songsList;
 
-const songs = [
-    {
-        name: "From The Start",
-        author: "Laufey",
-        url: "https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest.github.io/main/Assets/From%20The%20Start.mp3"
-    },
-    {
-        name: "Falling Behind",
-        author: "Laufey",
-        url: "https://raw.githubusercontent.com/JustSomeGuest/JustSomeGuest.github.io/main/Assets/Falling%20Behind.mp3"
-    }
-];
-
-const audio = document.getElementById("audioPlayer");
 const songName = document.getElementById("songName");
 const songAuthor = document.getElementById("songAuthor");
 const songDuration = document.getElementById("songDuration");
@@ -537,7 +379,6 @@ const rewindBtn = document.getElementById("rewindBtn");
 const forwardBtn = document.getElementById("forwardBtn");
 const volumeInput = document.getElementById("volumeInput");
 
-let currentIndex = 0;
 let isSeeking = false;
 
 function formatTime(seconds){
@@ -552,37 +393,46 @@ function paintSeek(pct){
 }
 
 function updateNavButtons(){
-    prevBtn.classList.toggle("disabled", currentIndex === 0);
-    nextBtn.classList.toggle("disabled", currentIndex === songs.length - 1);
+    prevBtn.classList.toggle("disabled", window.parent.currentSongIndex === 0);
+    nextBtn.classList.toggle("disabled", window.parent.currentSongIndex === songs.length - 1);
 }
 
-function loadSong(index, autoplay){
-    currentIndex = index;
-    const song = songs[currentIndex];
-
+function syncPlayerState() {
+    const song = songs[window.parent.currentSongIndex];
+    if(!song) return;
     songName.textContent = song.name;
     songAuthor.textContent = song.author;
-    audio.src = song.url;
-
+    
     updateNavButtons();
-
-    seekBar.value = 0;
-    paintSeek(0);
-    currentTimeEl.textContent = "0:00";
-    songDuration.textContent = "0:00";
-    totalTimeEl.textContent = "0:00";
-
-    if(autoplay){
-        audio.play();
-        playBtn.textContent = "| |";
-    } else {
-        playBtn.textContent = "▶︎";
+    playBtn.textContent = audio.paused ? "▶︎" : "| |";
+    
+    if(audio.duration) {
+        songDuration.textContent = formatTime(audio.duration);
+        totalTimeEl.textContent = formatTime(audio.duration);
+        if(!isSeeking) {
+            seekBar.value = (audio.currentTime / audio.duration) * 100;
+            paintSeek(seekBar.value);
+        }
     }
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+    volumeInput.value = Math.round(audio.volume * 100);
+}
+
+window.syncPlayerState = syncPlayerState;
+
+function loadSong(index){
+    window.parent.currentSongIndex = index;
+    audio.src = songs[index].url;
+    audio.play().catch(err => console.log(err));
+    syncPlayerState();
 }
 
 function togglePlay(){
+    if(!audio.src) {
+        audio.src = songs[window.parent.currentSongIndex].url;
+    }
     if(audio.paused){
-        audio.play();
+        audio.play().catch(err => console.log(err));
         playBtn.textContent = "| |";
     } else {
         audio.pause();
@@ -593,41 +443,25 @@ function togglePlay(){
 playBtn.addEventListener("click", togglePlay);
 
 prevBtn.addEventListener("click", () => {
-    if(currentIndex > 0) loadSong(currentIndex - 1, true);
+    if(window.parent.currentSongIndex > 0) loadSong(window.parent.currentSongIndex - 1);
 });
 
 nextBtn.addEventListener("click", () => {
-    if(currentIndex < songs.length - 1) loadSong(currentIndex + 1, true);
+    if(window.parent.currentSongIndex < songs.length - 1) loadSong(window.parent.currentSongIndex + 1);
 });
 
 rewindBtn.addEventListener("click", () => {
     audio.currentTime = Math.max(0, audio.currentTime - 30);
+    syncPlayerState();
 });
 
 forwardBtn.addEventListener("click", () => {
     audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 30);
+    syncPlayerState();
 });
 
-audio.addEventListener("loadedmetadata", () => {
-    songDuration.textContent = formatTime(audio.duration);
-    totalTimeEl.textContent = formatTime(audio.duration);
-});
-
-audio.addEventListener("timeupdate", () => {
-    if(!isSeeking && audio.duration){
-        seekBar.value = (audio.currentTime / audio.duration) * 100;
-        paintSeek(seekBar.value);
-    }
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-});
-
-audio.addEventListener("ended", () => {
-    if(currentIndex < songs.length - 1){
-        loadSong(currentIndex + 1, true);
-    } else {
-        playBtn.textContent = "▶︎";
-    }
-});
+audio.addEventListener("loadedmetadata", syncPlayerState);
+audio.addEventListener("timeupdate", syncPlayerState);
 
 seekBar.addEventListener("input", () => {
     isSeeking = true;
@@ -652,11 +486,7 @@ volumeInput.addEventListener("change", () => {
     audio.volume = val / 100;
 });
 
-audio.volume = 1;
-loadSong(0, false);
-paintSeek(0);
-
+syncPlayerState();
 </script>
-
 </body>
 </html>
