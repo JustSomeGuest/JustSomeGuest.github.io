@@ -210,12 +210,22 @@ input[type="range"].seek{
     outline:none;
 
     -webkit-appearance:none;
+    -moz-appearance:none;
+    appearance:none;
+}
 
-    accent-color:#34d399;
+input[type="range"].seek::-webkit-slider-runnable-track{
+    height:6px;
+
+    border-radius:99px;
+
+    background:transparent;
 }
 
 input[type="range"].seek::-webkit-slider-thumb{
     -webkit-appearance:none;
+
+    box-sizing:border-box;
 
     width:14px;
     height:14px;
@@ -223,6 +233,33 @@ input[type="range"].seek::-webkit-slider-thumb{
     border-radius:50%;
 
     background:#34d399;
+
+    border:2px solid #0b1120;
+
+    cursor:pointer;
+
+    margin-top:-6px;
+}
+
+input[type="range"].seek::-moz-range-track{
+    height:6px;
+
+    border-radius:99px;
+
+    background:transparent;
+}
+
+input[type="range"].seek::-moz-range-thumb{
+    box-sizing:border-box;
+
+    width:14px;
+    height:14px;
+
+    border-radius:50%;
+
+    background:#34d399;
+
+    border:2px solid #0b1120;
 
     cursor:pointer;
 }
@@ -510,6 +547,10 @@ function formatTime(seconds){
     return m + ":" + (s < 10 ? "0" + s : s);
 }
 
+function paintSeek(pct){
+    seekBar.style.background = "linear-gradient(to right, #34d399 " + pct + "%, #23304d " + pct + "%)";
+}
+
 function updateNavButtons(){
     prevBtn.classList.toggle("disabled", currentIndex === 0);
     nextBtn.classList.toggle("disabled", currentIndex === songs.length - 1);
@@ -526,6 +567,7 @@ function loadSong(index, autoplay){
     updateNavButtons();
 
     seekBar.value = 0;
+    paintSeek(0);
     currentTimeEl.textContent = "0:00";
     songDuration.textContent = "0:00";
     totalTimeEl.textContent = "0:00";
@@ -574,6 +616,7 @@ audio.addEventListener("loadedmetadata", () => {
 audio.addEventListener("timeupdate", () => {
     if(!isSeeking && audio.duration){
         seekBar.value = (audio.currentTime / audio.duration) * 100;
+        paintSeek(seekBar.value);
     }
     currentTimeEl.textContent = formatTime(audio.currentTime);
 });
@@ -588,6 +631,7 @@ audio.addEventListener("ended", () => {
 
 seekBar.addEventListener("input", () => {
     isSeeking = true;
+    paintSeek(seekBar.value);
     if(audio.duration){
         currentTimeEl.textContent = formatTime((seekBar.value / 100) * audio.duration);
     }
@@ -610,6 +654,7 @@ volumeInput.addEventListener("change", () => {
 
 audio.volume = 1;
 loadSong(0, false);
+paintSeek(0);
 
 </script>
 
