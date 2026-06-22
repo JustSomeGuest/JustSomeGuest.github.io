@@ -6,7 +6,7 @@ const overlay = document.getElementById("overlay");
 const splashScreen = document.getElementById("splashScreen");
 const frameLoader = document.getElementById("frameLoader");
 const audio = document.getElementById("globalAudioPlayer");
-
+ 
 window.songsList = [
     {
         name: "From The Start",
