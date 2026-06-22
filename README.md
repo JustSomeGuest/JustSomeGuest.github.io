@@ -1,1 +1,1 @@
-Go to https://justsomeguest.github.io/ to use this.
+Go to https://aqualuau.pages.dev/ to use this.
