@@ -415,7 +415,10 @@ function syncPlayerState() {
         }
     }
     currentTimeEl.textContent = formatTime(audio.currentTime);
-    volumeInput.value = Math.round(audio.volume * 100);
+    
+    if (document.activeElement !== volumeInput) {
+        volumeInput.value = Math.round(audio.volume * 100);
+    }
 }
 
 window.syncPlayerState = syncPlayerState;
@@ -478,12 +481,24 @@ seekBar.addEventListener("change", () => {
     isSeeking = false;
 });
 
-volumeInput.addEventListener("change", () => {
-    let val = parseInt(volumeInput.value, 10);
-    if(isNaN(val)) val = 100;
+function applyVolume() {
+    let rawVal = volumeInput.value.trim();
+    if (rawVal === "") {
+        audio.volume = 1;
+        return;
+    }
+    let val = parseInt(rawVal, 10);
+    if (isNaN(val)) {
+        val = 100;
+    }
     val = Math.min(100, Math.max(0, val));
-    volumeInput.value = val;
     audio.volume = val / 100;
+}
+
+volumeInput.addEventListener("input", applyVolume);
+volumeInput.addEventListener("change", () => {
+    applyVolume();
+    volumeInput.value = Math.round(audio.volume * 100);
 });
 
 syncPlayerState();
