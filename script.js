@@ -7,19 +7,38 @@ const splashScreen = document.getElementById("splashScreen");
 const frameLoader = document.getElementById("frameLoader");
 const audio = document.getElementById("globalAudioPlayer");
  
-window.songsList = [
-    {
-        name: "From The Start",
-        author: "Laufey",
-        url: "Assets/From The Start.mp3"
-    },
-    {
-        name: "Falling Behind",
-        author: "Laufey",
-        url: "Assets/Falling Behind.mp3"
-    }
+window.songsRaw = [
+    "Assets/From The Start - Laufey.mp3",
+    "Assets/Falling Behind - Laufey.mp3",
+    "Assets/Coffee - Beabadoobee.mp3"
 ];
 window.currentSongIndex = 0;
+
+function parseSongData(url) {
+    if (!url) return { name: "-", author: "-", url: "" };
+    const filename = url.substring(url.lastIndexOf('/') + 1);
+    const cleanName = filename.replace(/\.[^/.]+$/, "");
+    const parts = cleanName.split(" - ");
+    
+    if (parts.length >= 2) {
+        return {
+            name: parts[0].trim(),
+            author: parts[1].trim(),
+            url: url
+        };
+    }
+    return {
+        name: cleanName.trim(),
+        author: "Unknown",
+        url: url
+    };
+}
+
+Object.defineProperty(window, 'songsList', {
+    get: function() {
+        return window.songsRaw.map(url => parseSongData(url));
+    }
+});
 
 frame.addEventListener('load', () => {
     frameLoader.classList.remove('visible');
@@ -45,7 +64,7 @@ buttons.forEach(button => {
 splashScreen.addEventListener("click", () => {
     splashScreen.classList.add("fade-out");
     if (audio.paused && !audio.src) {
-        audio.src = window.songsList[window.currentSongIndex].url;
+        audio.src = window.songsRaw[window.currentSongIndex];
         audio.volume = 1;
         audio.play().catch(err => console.log(err));
         if (frame.contentWindow && typeof frame.contentWindow.syncPlayerState === 'function') {
@@ -55,9 +74,9 @@ splashScreen.addEventListener("click", () => {
 });
 
 audio.addEventListener("ended", () => {
-    if (window.currentSongIndex < window.songsList.length - 1) {
+    if (window.currentSongIndex < window.songsRaw.length - 1) {
         window.currentSongIndex++;
-        audio.src = window.songsList[window.currentSongIndex].url;
+        audio.src = window.songsRaw[window.currentSongIndex];
         audio.play().catch(err => console.log(err));
     } else {
         audio.currentTime = 0;
