@@ -245,6 +245,12 @@ input[type="range"].seek::-moz-range-thumb{
     pointer-events:none;
 }
 
+.ctrlBtn.loop-active {
+    background: #1e3a5f;
+    color: #60a5fa;
+    border-color: #60a5fa;
+}
+
 .volumeRow{
     display:flex;
     align-items:center;
@@ -353,6 +359,7 @@ input[type="range"].seek::-moz-range-thumb{
         <div class="ctrlBtn play" id="playBtn">▶︎</div>
         <div class="ctrlBtn skip" id="forwardBtn">↻︎<span class="lbl">30</span></div>
         <div class="ctrlBtn" id="nextBtn">⏭︎</div>
+        <div class="ctrlBtn" id="loopBtn" title="Toggle Loop">🔂︎</div>
     </div>
 
     <div class="volumeRow">
@@ -378,6 +385,7 @@ const nextBtn = document.getElementById("nextBtn");
 const rewindBtn = document.getElementById("rewindBtn");
 const forwardBtn = document.getElementById("forwardBtn");
 const volumeInput = document.getElementById("volumeInput");
+const loopBtn = document.getElementById("loopBtn");
 
 let isSeeking = false;
 
@@ -405,6 +413,8 @@ function syncPlayerState() {
     
     updateNavButtons();
     playBtn.textContent = audio.paused ? "▶︎" : "| |";
+    
+    loopBtn.classList.toggle("loop-active", audio.loop);
     
     if(audio.duration) {
         songDuration.textContent = formatTime(audio.duration);
@@ -460,6 +470,11 @@ rewindBtn.addEventListener("click", () => {
 
 forwardBtn.addEventListener("click", () => {
     audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 30);
+    syncPlayerState();
+});
+
+loopBtn.addEventListener("click", () => {
+    audio.loop = !audio.loop;
     syncPlayerState();
 });
 
