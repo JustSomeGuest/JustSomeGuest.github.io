@@ -75,6 +75,13 @@ splashScreen.addEventListener("click", () => {
 });
 
 audio.addEventListener("ended", () => {
+    if (audio.loop) {
+        if (frame.contentWindow && typeof frame.contentWindow.syncPlayerState === 'function') {
+            frame.contentWindow.syncPlayerState();
+        }
+        return;
+    }
+
     if (window.currentSongIndex < window.songsRaw.length - 1) {
         window.currentSongIndex++;
         audio.src = window.songsRaw[window.currentSongIndex];
