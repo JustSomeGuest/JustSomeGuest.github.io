@@ -10,7 +10,8 @@ const audio = document.getElementById("globalAudioPlayer");
 window.songsRaw = [
     "Assets/From The Start - Laufey.mp3",
     "Assets/Falling Behind - Laufey.mp3",
-    "Assets/Coffee - Beabadoobee.mp3"
+    "Assets/Coffee - Beabadoobee.mp3",
+    "Assets/Glue Song - Beabadoobee.mp3,
 ];
 window.currentSongIndex = 0;
 
